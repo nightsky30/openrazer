@@ -212,6 +212,10 @@ static ssize_t razer_attr_read_device_type(struct device *dev, struct device_att
         device_type = "Razer DeathAdder 3500\n";
         break;
 
+    case USB_DEVICE_ID_RAZER_NAGA_TRINITY:
+        device_type = "Razer Naga Trinity\n";
+        break;
+
     default:
         device_type = "Unknown Device\n";
     }
@@ -684,12 +688,12 @@ static ssize_t razer_attr_write_poll_rate(struct device *dev, struct device_attr
 }
 
 /**
- * Write device file "set_wireless_brightness"
+ * Write device file "matrix_brightness"
  *
  * Sets the brightness to the ASCII number written to this file.
  */
 
-static ssize_t razer_attr_write_set_brightness(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+static ssize_t razer_attr_write_matrix_brightness(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
@@ -711,6 +715,11 @@ static ssize_t razer_attr_write_set_brightness(struct device *dev, struct device
         report.transaction_id.id = 0x3f;
         break;
 
+    case USB_DEVICE_ID_RAZER_NAGA_TRINITY:
+        // Naga Trinity uses the LED 0x00 and Matrix Brightness
+        report = razer_chroma_extended_matrix_brightness(VARSTORE, 0x00, brightness);
+        break;
+
     default:
         report = razer_chroma_standard_set_led_brightness(VARSTORE, BACKLIGHT_LED, brightness);
         break;
@@ -721,11 +730,11 @@ static ssize_t razer_attr_write_set_brightness(struct device *dev, struct device
 }
 
 /**
- * Read device file "macro_mode"
+ * Read device file "matrix_brightness"
  *
  * Returns a string
  */
-static ssize_t razer_attr_read_set_brightness(struct device *dev, struct device_attribute *attr, char *buf)
+static ssize_t razer_attr_read_matrix_brightness(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
@@ -748,6 +757,11 @@ static ssize_t razer_attr_read_set_brightness(struct device *dev, struct device_
         // Orochi sets brightness of scroll wheel apparently
         report = razer_chroma_standard_get_led_brightness(VARSTORE, BACKLIGHT_LED);
         report.transaction_id.id = 0x3f;
+        break;
+
+    case USB_DEVICE_ID_RAZER_NAGA_TRINITY:
+        // Naga Trinity uses the LED 0x00 and Matrix Brightness
+        report = razer_chroma_extended_matrix_get_brightness(VARSTORE, 0x00);
         break;
 
     default:
@@ -1885,7 +1899,7 @@ static DEVICE_ATTR(charge_effect,             0220, NULL,                       
 static DEVICE_ATTR(charge_colour,             0220, NULL,                                  razer_attr_write_set_charging_colour);
 static DEVICE_ATTR(charge_low_threshold,      0220, NULL,                                  razer_attr_write_set_low_battery_threshold);
 
-static DEVICE_ATTR(matrix_brightness,         0660, razer_attr_read_set_brightness,        razer_attr_write_set_brightness);
+static DEVICE_ATTR(matrix_brightness,         0660, razer_attr_read_matrix_brightness,     razer_attr_write_matrix_brightness);
 static DEVICE_ATTR(matrix_custom_frame,       0220, NULL,                                  razer_attr_write_set_key_row);
 static DEVICE_ATTR(matrix_effect_none,        0220, NULL,                                  razer_attr_write_mode_none);   // Matrix
 static DEVICE_ATTR(matrix_effect_custom,      0220, NULL,                                  razer_attr_write_mode_custom);   // Matrix
@@ -2236,6 +2250,12 @@ static int razer_mouse_probe(struct hid_device *hdev, const struct hid_device_id
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_poll_rate);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_dpi);
             break;
+
+        case USB_DEVICE_ID_RAZER_NAGA_TRINITY:
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_dpi);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_poll_rate);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_brightness);
+            break;
         }
 
     }
@@ -2485,6 +2505,12 @@ static void razer_mouse_disconnect(struct hid_device *hdev)
             device_remove_file(&hdev->dev, &dev_attr_logo_led_state);
             device_remove_file(&hdev->dev, &dev_attr_poll_rate);
             device_remove_file(&hdev->dev, &dev_attr_dpi);
+            break;
+
+        case USB_DEVICE_ID_RAZER_NAGA_TRINITY:
+            device_remove_file(&hdev->dev, &dev_attr_dpi);
+            device_remove_file(&hdev->dev, &dev_attr_poll_rate);
+            device_remove_file(&hdev->dev, &dev_attr_matrix_brightness);
             break;
         }
 
