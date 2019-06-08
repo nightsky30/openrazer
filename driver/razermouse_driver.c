@@ -1401,66 +1401,6 @@ static ssize_t razer_attr_read_logo_led_state(struct device *dev, struct device_
 }
 
 /**
- * Write device file "left_led_state"
- */
-static ssize_t razer_attr_write_left_led_state(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
-    struct razer_mouse_device *device = dev_get_drvdata(dev);
-    unsigned char enabled = (unsigned char)simple_strtoul(buf, NULL, 10);
-    struct razer_report report = razer_chroma_standard_set_led_state(VARSTORE, LEFT_LED, enabled);
-    report.transaction_id.id = 0x3F;
-
-    razer_send_payload(device->usb_dev, &report);
-
-    return count;
-}
-
-/**
- * Read device file "left_led_state"
- */
-static ssize_t razer_attr_read_left_led_state(struct device *dev, struct device_attribute *attr, char *buf)
-{
-    struct razer_mouse_device *device = dev_get_drvdata(dev);
-    struct razer_report report = razer_chroma_standard_get_led_state(VARSTORE, LEFT_LED);
-    struct razer_report response = {0};
-    report.transaction_id.id = 0x3F;
-
-    response = razer_send_payload(device->usb_dev, &report);
-
-    return sprintf(buf, "%d\n", response.arguments[2]);
-}
-
-/**
- * Write device file "right_led_state"
- */
-static ssize_t razer_attr_write_right_led_state(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
-    struct razer_mouse_device *device = dev_get_drvdata(dev);
-    unsigned char enabled = (unsigned char)simple_strtoul(buf, NULL, 10);
-    struct razer_report report = razer_chroma_standard_set_led_state(VARSTORE, RIGHT_LED, enabled);
-    report.transaction_id.id = 0x3F;
-
-    razer_send_payload(device->usb_dev, &report);
-
-    return count;
-}
-
-/**
- * Read device file "right_led_state"
- */
-static ssize_t razer_attr_read_right_led_state(struct device *dev, struct device_attribute *attr, char *buf)
-{
-    struct razer_mouse_device *device = dev_get_drvdata(dev);
-    struct razer_report report = razer_chroma_standard_get_led_state(VARSTORE, RIGHT_LED);
-    struct razer_report response = {0};
-    report.transaction_id.id = 0x3F;
-
-    response = razer_send_payload(device->usb_dev, &report);
-
-    return sprintf(buf, "%d\n", response.arguments[2]);
-}
-
-/**
  * Write device file "scroll_led_rgb"
  */
 static ssize_t razer_attr_write_scroll_led_rgb(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1534,80 +1474,6 @@ static ssize_t razer_attr_read_logo_led_rgb(struct device *dev, struct device_at
 }
 
 /**
- * Write device file "left_led_rgb"
- */
-static ssize_t razer_attr_write_left_led_rgb(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
-    struct usb_interface *intf = to_usb_interface(dev->parent);
-    struct usb_device *usb_dev = interface_to_usbdev(intf);
-    struct razer_report report = {0};
-
-    if(count == 3) {
-        report = razer_chroma_standard_set_led_rgb(VARSTORE, LEFT_LED, (struct razer_rgb*)&buf[0]);
-        report.transaction_id.id = 0x3F;
-        razer_send_payload(usb_dev, &report);
-    } else {
-        printk(KERN_WARNING "razermouse: Left LED mode only accepts RGB (3byte)");
-    }
-
-    return count;
-}
-
-/**
- * Read device file "left_led_rgb"
- */
-static ssize_t razer_attr_read_left_led_rgb(struct device *dev, struct device_attribute *attr, char *buf)
-{
-    struct usb_interface *intf = to_usb_interface(dev->parent);
-    struct usb_device *usb_dev = interface_to_usbdev(intf);
-    struct razer_report report = razer_chroma_standard_get_led_rgb(VARSTORE, LEFT_LED);
-    struct razer_report response = {0};
-
-    report.transaction_id.id = 0x3F;
-    response = razer_send_payload(usb_dev, &report);
-
-
-    return sprintf(buf, "%u%u%u\n", response.arguments[2], response.arguments[3], response.arguments[4]);
-}
-
-/**
- * Write device file "right_led_rgb"
- */
-static ssize_t razer_attr_write_right_led_rgb(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
-    struct usb_interface *intf = to_usb_interface(dev->parent);
-    struct usb_device *usb_dev = interface_to_usbdev(intf);
-    struct razer_report report = {0};
-
-    if(count == 3) {
-        report = razer_chroma_standard_set_led_rgb(VARSTORE, RIGHT_LED, (struct razer_rgb*)&buf[0]);
-        report.transaction_id.id = 0x3F;
-        razer_send_payload(usb_dev, &report);
-    } else {
-        printk(KERN_WARNING "razermouse: Right LED mode only accepts RGB (3byte)");
-    }
-
-    return count;
-}
-
-/**
- * Read device file "right_led_rgb"
- */
-static ssize_t razer_attr_read_right_led_rgb(struct device *dev, struct device_attribute *attr, char *buf)
-{
-    struct usb_interface *intf = to_usb_interface(dev->parent);
-    struct usb_device *usb_dev = interface_to_usbdev(intf);
-    struct razer_report report = razer_chroma_standard_get_led_rgb(VARSTORE, RIGHT_LED);
-    struct razer_report response = {0};
-
-    report.transaction_id.id = 0x3F;
-    response = razer_send_payload(usb_dev, &report);
-
-
-    return sprintf(buf, "%u%u%u\n", response.arguments[2], response.arguments[3], response.arguments[4]);
-}
-
-/**
  * Write device file "scroll_led_effect"
  */
 static ssize_t razer_attr_write_scroll_led_effect(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1662,70 +1528,6 @@ static ssize_t razer_attr_read_logo_led_effect(struct device *dev, struct device
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
     struct razer_report report = razer_chroma_standard_get_led_effect(VARSTORE, LOGO_LED);
-    struct razer_report response = {0};
-
-    report.transaction_id.id = 0x3F;
-    response = razer_send_payload(usb_dev, &report);
-
-    return sprintf(buf, "%d\n", response.arguments[2]);
-}
-
-/**
- * Write device file "left_led_effect"
- */
-static ssize_t razer_attr_write_left_led_effect(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
-    struct usb_interface *intf = to_usb_interface(dev->parent);
-    struct usb_device *usb_dev = interface_to_usbdev(intf);
-    unsigned char effect = (unsigned char)simple_strtoul(buf, NULL, 10);
-    struct razer_report report = razer_chroma_standard_set_led_effect(VARSTORE, LEFT_LED, effect);
-    report.transaction_id.id = 0x3F;
-
-    razer_send_payload(usb_dev, &report);
-
-    return count;
-}
-
-/**
- * Read device file "left_led_effect"
- */
-static ssize_t razer_attr_read_left_led_effect(struct device *dev, struct device_attribute *attr, char *buf)
-{
-    struct usb_interface *intf = to_usb_interface(dev->parent);
-    struct usb_device *usb_dev = interface_to_usbdev(intf);
-    struct razer_report report = razer_chroma_standard_get_led_effect(VARSTORE, LEFT_LED);
-    struct razer_report response = {0};
-
-    report.transaction_id.id = 0x3F;
-    response = razer_send_payload(usb_dev, &report);
-
-    return sprintf(buf, "%d\n", response.arguments[2]);
-}
-
-/**
- * Write device file "right_led_effect"
- */
-static ssize_t razer_attr_write_right_led_effect(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
-    struct usb_interface *intf = to_usb_interface(dev->parent);
-    struct usb_device *usb_dev = interface_to_usbdev(intf);
-    unsigned char effect = (unsigned char)simple_strtoul(buf, NULL, 10);
-    struct razer_report report = razer_chroma_standard_set_led_effect(VARSTORE, RIGHT_LED, effect);
-    report.transaction_id.id = 0x3F;
-
-    razer_send_payload(usb_dev, &report);
-
-    return count;
-}
-
-/**
- * Read device file "right_led_effect"
- */
-static ssize_t razer_attr_read_right_led_effect(struct device *dev, struct device_attribute *attr, char *buf)
-{
-    struct usb_interface *intf = to_usb_interface(dev->parent);
-    struct usb_device *usb_dev = interface_to_usbdev(intf);
-    struct razer_report report = razer_chroma_standard_get_led_effect(VARSTORE, RIGHT_LED);
     struct razer_report response = {0};
 
     report.transaction_id.id = 0x3F;
@@ -2538,10 +2340,6 @@ static DEVICE_ATTR(logo_matrix_effect_static,      0220, NULL,                  
 static DEVICE_ATTR(logo_matrix_effect_none,        0220, NULL,                             razer_attr_write_logo_mode_none);
 
 static DEVICE_ATTR(left_led_brightness,       0660, razer_attr_read_left_led_brightness,   razer_attr_write_left_led_brightness);
-// For old-school led commands
-static DEVICE_ATTR(left_led_state,            0660, razer_attr_read_left_led_state,        razer_attr_write_left_led_state);
-static DEVICE_ATTR(left_led_rgb,              0660, razer_attr_read_left_led_rgb,          razer_attr_write_left_led_rgb);
-static DEVICE_ATTR(left_led_effect,           0660, razer_attr_read_left_led_effect,       razer_attr_write_left_led_effect);
 // For "extended" matrix effects
 static DEVICE_ATTR(left_matrix_effect_wave,        0220, NULL,                             razer_attr_write_left_mode_wave);
 static DEVICE_ATTR(left_matrix_effect_spectrum,    0220, NULL,                             razer_attr_write_left_mode_spectrum);
@@ -2551,10 +2349,6 @@ static DEVICE_ATTR(left_matrix_effect_static,      0220, NULL,                  
 static DEVICE_ATTR(left_matrix_effect_none,        0220, NULL,                             razer_attr_write_left_mode_none);
 
 static DEVICE_ATTR(right_led_brightness,       0660, razer_attr_read_right_led_brightness,   razer_attr_write_right_led_brightness);
-// For old-school led commands
-static DEVICE_ATTR(right_led_state,            0660, razer_attr_read_right_led_state,        razer_attr_write_right_led_state);
-static DEVICE_ATTR(right_led_rgb,              0660, razer_attr_read_right_led_rgb,          razer_attr_write_right_led_rgb);
-static DEVICE_ATTR(right_led_effect,           0660, razer_attr_read_right_led_effect,       razer_attr_write_right_led_effect);
 // For "extended" matrix effects
 static DEVICE_ATTR(right_matrix_effect_wave,        0220, NULL,                             razer_attr_write_right_mode_wave);
 static DEVICE_ATTR(right_matrix_effect_spectrum,    0220, NULL,                             razer_attr_write_right_mode_spectrum);
