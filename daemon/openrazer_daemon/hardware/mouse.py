@@ -23,13 +23,18 @@ class RazerLanceheadTE(__RazerDeviceSpecialBrightnessSuspend):
     USB_PID = 0x0060
     HAS_MATRIX = True
     MATRIX_DIMS = [1, 16]
-    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate', 'set_idle_time', 'set_low_battery_threshold', 'get_battery', 'is_charging', 'get_logo_brightness', 'set_logo_brightness', 'get_scroll_brightness', 'set_scroll_brightness',
+    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate', 'set_idle_time', 'set_low_battery_threshold', 'get_battery', 'is_charging', 'get_logo_brightness', 'set_logo_brightness', 'get_scroll_brightness', 'set_scroll_brightness', \
+               'get_left_brightness_lancehead_te', 'set_left_brightness_lancehead_te', 'get_right_brightness_lancehead_te', 'set_right_brightness_lancehead_te',
                # Effects
                # 'set_wave_effect', 'set_static_effect', 'set_spectrum_effect', 'set_reactive_effect', 'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect', 'set_custom_effect',
                # Logo
                'set_logo_wave_lancehead_te', 'set_logo_static_naga_hex_v2', 'set_logo_spectrum_naga_hex_v2', 'set_logo_none_naga_hex_v2', 'set_logo_reactive_naga_hex_v2', 'set_logo_breath_random_naga_hex_v2', 'set_logo_breath_single_naga_hex_v2', 'set_logo_breath_dual_naga_hex_v2',
                # Scroll wheel
                'set_scroll_wave_lancehead_te', 'set_scroll_static_naga_hex_v2', 'set_scroll_spectrum_naga_hex_v2', 'set_scroll_none_naga_hex_v2', 'set_scroll_reactive_naga_hex_v2', 'set_scroll_breath_random_naga_hex_v2', 'set_scroll_breath_single_naga_hex_v2', 'set_scroll_breath_dual_naga_hex_v2',
+               # Left side
+               'set_left_wave_lancehead_te', 'set_left_static_lancehead_te', 'set_left_spectrum_lancehead_te', 'set_left_none_lancehead_te', 'set_left_reactive_lancehead_te', 'set_left_breath_random_lancehead_te', 'set_left_breath_single_lancehead_te', 'set_left_breath_dual_lancehead_te',
+               # Right side
+               'set_right_wave_lancehead_te', 'set_right_static_lancehead_te', 'set_right_spectrum_lancehead_te', 'set_right_none_lancehead_te', 'set_right_reactive_lancehead_te', 'set_right_breath_random_lancehead_te', 'set_right_breath_single_lancehead_te', 'set_right_breath_dual_lancehead_te',
                # Can set LOGO and Scrol with custom
                'set_custom_effect', 'set_key_row']
 
