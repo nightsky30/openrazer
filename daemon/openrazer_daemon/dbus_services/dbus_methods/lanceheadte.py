@@ -43,6 +43,49 @@ def set_scroll_wave_lancehead_te(self, direction):
         driver_file.write(str(direction))
 
 
+@endpoint('razer.device.lighting.left', 'getLeftBrightness', out_sig='d')
+def get_left_brightness_lancehead_te(self):
+    """
+    Get the device's brightness
+    :return: Brightness
+    :rtype: float
+    """
+    self.logger.debug("DBus call get_left_brightness")
+
+    driver_path = self.get_driver_path('left_led_brightness')
+
+    with open(driver_path, 'r') as driver_file:
+        brightness = round(float(driver_file.read()) * (100.0 / 255.0), 2)
+
+        return brightness
+
+
+@endpoint('razer.device.lighting.left', 'setLeftBrightness', in_sig='d')
+def set_left_brightness_lancehead_te(self, brightness):
+    """
+    Set the device's brightness
+    :param brightness: Brightness
+    :type brightness: int
+    """
+    self.logger.debug("DBus call set_left_brightness")
+
+    driver_path = self.get_driver_path('left_led_brightness')
+
+    self.method_args['brightness'] = brightness
+
+    brightness = int(round(brightness * (255.0 / 100.0)))
+    if brightness > 255:
+        brightness = 255
+    elif brightness < 0:
+        brightness = 0
+
+    with open(driver_path, 'w') as driver_file:
+        driver_file.write(str(brightness))
+
+    # Notify others
+    self.send_effect_event('setBrightness', brightness)
+
+
 @endpoint('razer.device.lighting.left', 'setLeftWave', in_sig='i')
 def set_left_wave_lancehead_te(self, direction):
     """
@@ -244,6 +287,49 @@ def set_left_breath_dual_lancehead_te(self, red1, green1, blue1, red2, green2, b
 
     with open(driver_path, 'wb') as driver_file:
         driver_file.write(payload)
+
+
+@endpoint('razer.device.lighting.right', 'getRightBrightness', out_sig='d')
+def get_right_brightness_lancehead_te(self):
+    """
+    Get the device's brightness
+    :return: Brightness
+    :rtype: float
+    """
+    self.logger.debug("DBus call get_right_brightness")
+
+    driver_path = self.get_driver_path('right_led_brightness')
+
+    with open(driver_path, 'r') as driver_file:
+        brightness = round(float(driver_file.read()) * (100.0 / 255.0), 2)
+
+        return brightness
+
+
+@endpoint('razer.device.lighting.right', 'setRightBrightness', in_sig='d')
+def set_right_brightness_lancehead_te(self, brightness):
+    """
+    Set the device's brightness
+    :param brightness: Brightness
+    :type brightness: int
+    """
+    self.logger.debug("DBus call set_right_brightness")
+
+    driver_path = self.get_driver_path('right_led_brightness')
+
+    self.method_args['brightness'] = brightness
+
+    brightness = int(round(brightness * (255.0 / 100.0)))
+    if brightness > 255:
+        brightness = 255
+    elif brightness < 0:
+        brightness = 0
+
+    with open(driver_path, 'w') as driver_file:
+        driver_file.write(str(brightness))
+
+    # Notify others
+    self.send_effect_event('setBrightness', brightness)
 
 
 @endpoint('razer.device.lighting.right', 'setRightWave', in_sig='i')
