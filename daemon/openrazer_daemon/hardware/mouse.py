@@ -30,6 +30,10 @@ class RazerLanceheadTE(__RazerDeviceSpecialBrightnessSuspend):
                'set_logo_wave_lancehead_te', 'set_logo_static_naga_hex_v2', 'set_logo_spectrum_naga_hex_v2', 'set_logo_none_naga_hex_v2', 'set_logo_reactive_naga_hex_v2', 'set_logo_breath_random_naga_hex_v2', 'set_logo_breath_single_naga_hex_v2', 'set_logo_breath_dual_naga_hex_v2',
                # Scroll wheel
                'set_scroll_wave_lancehead_te', 'set_scroll_static_naga_hex_v2', 'set_scroll_spectrum_naga_hex_v2', 'set_scroll_none_naga_hex_v2', 'set_scroll_reactive_naga_hex_v2', 'set_scroll_breath_random_naga_hex_v2', 'set_scroll_breath_single_naga_hex_v2', 'set_scroll_breath_dual_naga_hex_v2',
+               # Left side
+               'set_left_wave_lancehead_te', 'set_left_static_lancehead_te', 'set_left_spectrum_lancehead_te', 'set_left_none_lancehead_te', 'set_left_reactive_lancehead_te', 'set_left_breath_random_lancehead_te', 'set_left_breath_single_lancehead_te', 'set_left_breath_dual_lancehead_te',
+               # Right side
+               'set_right_wave_lancehead_te', 'set_right_static_lancehead_te', 'set_right_spectrum_lancehead_te', 'set_right_none_lancehead_te', 'set_right_reactive_lancehead_te', 'set_right_breath_random_lancehead_te', 'set_right_breath_single_lancehead_te', 'set_right_breath_dual_lancehead_te',
                # Can set LOGO and Scrol with custom
                'set_custom_effect', 'set_key_row']
 

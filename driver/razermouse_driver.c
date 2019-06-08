@@ -1174,7 +1174,7 @@ static ssize_t razer_attr_read_logo_led_brightness(struct device *dev, struct de
 }
 
 /**
- * Write device file "scroll_led_brightness"
+ * Write device file "logo_led_brightness"
  */
 static ssize_t razer_attr_write_logo_led_brightness(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
@@ -1196,6 +1196,106 @@ static ssize_t razer_attr_write_logo_led_brightness(struct device *dev, struct d
 
     default:
         report = razer_chroma_standard_set_led_brightness(VARSTORE, LOGO_LED, brightness);
+        break;
+    }
+
+    razer_send_payload(usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Read device file "left_led_brightness"
+ */
+static ssize_t razer_attr_read_left_led_brightness(struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+    struct razer_report response = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_get_brightness(VARSTORE, LEFT_LED);
+        break;
+
+    default:
+        report = razer_chroma_standard_get_led_brightness(VARSTORE, LEFT_LED);
+        break;
+    }
+
+    response = razer_send_payload(usb_dev, &report);
+
+    return sprintf(buf, "%d\n", response.arguments[2]);
+}
+
+/**
+ * Write device file "left_led_brightness"
+ */
+static ssize_t razer_attr_write_left_led_brightness(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    unsigned char brightness = (unsigned char)simple_strtoul(buf, NULL, 10);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_brightness(VARSTORE, LEFT_LED, brightness);
+        break;
+
+    default:
+        report = razer_chroma_standard_set_led_brightness(VARSTORE, LEFT_LED, brightness);
+        break;
+    }
+
+    razer_send_payload(usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Read device file "right_led_brightness"
+ */
+static ssize_t razer_attr_read_right_led_brightness(struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+    struct razer_report response = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_get_brightness(VARSTORE, RIGHT_LED);
+        break;
+
+    default:
+        report = razer_chroma_standard_get_led_brightness(VARSTORE, RIGHT_LED);
+        break;
+    }
+
+    response = razer_send_payload(usb_dev, &report);
+
+    return sprintf(buf, "%d\n", response.arguments[2]);
+}
+
+/**
+ * Write device file "right_led_brightness"
+ */
+static ssize_t razer_attr_write_right_led_brightness(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    unsigned char brightness = (unsigned char)simple_strtoul(buf, NULL, 10);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_brightness(VARSTORE, RIGHT_LED, brightness);
+        break;
+
+    default:
+        report = razer_chroma_standard_set_led_brightness(VARSTORE, RIGHT_LED, brightness);
         break;
     }
 
@@ -1301,6 +1401,66 @@ static ssize_t razer_attr_read_logo_led_state(struct device *dev, struct device_
 }
 
 /**
+ * Write device file "left_led_state"
+ */
+static ssize_t razer_attr_write_left_led_state(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct razer_mouse_device *device = dev_get_drvdata(dev);
+    unsigned char enabled = (unsigned char)simple_strtoul(buf, NULL, 10);
+    struct razer_report report = razer_chroma_standard_set_led_state(VARSTORE, LEFT_LED, enabled);
+    report.transaction_id.id = 0x3F;
+
+    razer_send_payload(device->usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Read device file "left_led_state"
+ */
+static ssize_t razer_attr_read_left_led_state(struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct razer_mouse_device *device = dev_get_drvdata(dev);
+    struct razer_report report = razer_chroma_standard_get_led_state(VARSTORE, LEFT_LED);
+    struct razer_report response = {0};
+    report.transaction_id.id = 0x3F;
+
+    response = razer_send_payload(device->usb_dev, &report);
+
+    return sprintf(buf, "%d\n", response.arguments[2]);
+}
+
+/**
+ * Write device file "right_led_state"
+ */
+static ssize_t razer_attr_write_right_led_state(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct razer_mouse_device *device = dev_get_drvdata(dev);
+    unsigned char enabled = (unsigned char)simple_strtoul(buf, NULL, 10);
+    struct razer_report report = razer_chroma_standard_set_led_state(VARSTORE, RIGHT_LED, enabled);
+    report.transaction_id.id = 0x3F;
+
+    razer_send_payload(device->usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Read device file "right_led_state"
+ */
+static ssize_t razer_attr_read_right_led_state(struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct razer_mouse_device *device = dev_get_drvdata(dev);
+    struct razer_report report = razer_chroma_standard_get_led_state(VARSTORE, RIGHT_LED);
+    struct razer_report response = {0};
+    report.transaction_id.id = 0x3F;
+
+    response = razer_send_payload(device->usb_dev, &report);
+
+    return sprintf(buf, "%d\n", response.arguments[2]);
+}
+
+/**
  * Write device file "scroll_led_rgb"
  */
 static ssize_t razer_attr_write_scroll_led_rgb(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1350,7 +1510,7 @@ static ssize_t razer_attr_write_logo_led_rgb(struct device *dev, struct device_a
         report.transaction_id.id = 0x3F;
         razer_send_payload(usb_dev, &report);
     } else {
-        printk(KERN_WARNING "razermouse: Scroll wheel LED mode only accepts RGB (3byte)");
+        printk(KERN_WARNING "razermouse: Logo LED mode only accepts RGB (3byte)");
     }
 
     return count;
@@ -1364,6 +1524,80 @@ static ssize_t razer_attr_read_logo_led_rgb(struct device *dev, struct device_at
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
     struct razer_report report = razer_chroma_standard_get_led_rgb(VARSTORE, LOGO_LED);
+    struct razer_report response = {0};
+
+    report.transaction_id.id = 0x3F;
+    response = razer_send_payload(usb_dev, &report);
+
+
+    return sprintf(buf, "%u%u%u\n", response.arguments[2], response.arguments[3], response.arguments[4]);
+}
+
+/**
+ * Write device file "left_led_rgb"
+ */
+static ssize_t razer_attr_write_left_led_rgb(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    if(count == 3) {
+        report = razer_chroma_standard_set_led_rgb(VARSTORE, LEFT_LED, (struct razer_rgb*)&buf[0]);
+        report.transaction_id.id = 0x3F;
+        razer_send_payload(usb_dev, &report);
+    } else {
+        printk(KERN_WARNING "razermouse: Left LED mode only accepts RGB (3byte)");
+    }
+
+    return count;
+}
+
+/**
+ * Read device file "left_led_rgb"
+ */
+static ssize_t razer_attr_read_left_led_rgb(struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = razer_chroma_standard_get_led_rgb(VARSTORE, LEFT_LED);
+    struct razer_report response = {0};
+
+    report.transaction_id.id = 0x3F;
+    response = razer_send_payload(usb_dev, &report);
+
+
+    return sprintf(buf, "%u%u%u\n", response.arguments[2], response.arguments[3], response.arguments[4]);
+}
+
+/**
+ * Write device file "right_led_rgb"
+ */
+static ssize_t razer_attr_write_right_led_rgb(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    if(count == 3) {
+        report = razer_chroma_standard_set_led_rgb(VARSTORE, RIGHT_LED, (struct razer_rgb*)&buf[0]);
+        report.transaction_id.id = 0x3F;
+        razer_send_payload(usb_dev, &report);
+    } else {
+        printk(KERN_WARNING "razermouse: Right LED mode only accepts RGB (3byte)");
+    }
+
+    return count;
+}
+
+/**
+ * Read device file "right_led_rgb"
+ */
+static ssize_t razer_attr_read_right_led_rgb(struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = razer_chroma_standard_get_led_rgb(VARSTORE, RIGHT_LED);
     struct razer_report response = {0};
 
     report.transaction_id.id = 0x3F;
@@ -1428,6 +1662,70 @@ static ssize_t razer_attr_read_logo_led_effect(struct device *dev, struct device
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
     struct razer_report report = razer_chroma_standard_get_led_effect(VARSTORE, LOGO_LED);
+    struct razer_report response = {0};
+
+    report.transaction_id.id = 0x3F;
+    response = razer_send_payload(usb_dev, &report);
+
+    return sprintf(buf, "%d\n", response.arguments[2]);
+}
+
+/**
+ * Write device file "left_led_effect"
+ */
+static ssize_t razer_attr_write_left_led_effect(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    unsigned char effect = (unsigned char)simple_strtoul(buf, NULL, 10);
+    struct razer_report report = razer_chroma_standard_set_led_effect(VARSTORE, LEFT_LED, effect);
+    report.transaction_id.id = 0x3F;
+
+    razer_send_payload(usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Read device file "left_led_effect"
+ */
+static ssize_t razer_attr_read_left_led_effect(struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = razer_chroma_standard_get_led_effect(VARSTORE, LEFT_LED);
+    struct razer_report response = {0};
+
+    report.transaction_id.id = 0x3F;
+    response = razer_send_payload(usb_dev, &report);
+
+    return sprintf(buf, "%d\n", response.arguments[2]);
+}
+
+/**
+ * Write device file "right_led_effect"
+ */
+static ssize_t razer_attr_write_right_led_effect(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    unsigned char effect = (unsigned char)simple_strtoul(buf, NULL, 10);
+    struct razer_report report = razer_chroma_standard_set_led_effect(VARSTORE, RIGHT_LED, effect);
+    report.transaction_id.id = 0x3F;
+
+    razer_send_payload(usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Read device file "right_led_effect"
+ */
+static ssize_t razer_attr_read_right_led_effect(struct device *dev, struct device_attribute *attr, char *buf)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = razer_chroma_standard_get_led_effect(VARSTORE, RIGHT_LED);
     struct razer_report response = {0};
 
     report.transaction_id.id = 0x3F;
@@ -1833,6 +2131,316 @@ static ssize_t razer_attr_write_logo_mode_none(struct device *dev, struct device
 }
 
 /**
+ * Write device file "left_mode_wave" (for extended mouse matrix effects)
+ *
+ * Wave effect mode is activated whenever the file is written to
+ */
+static ssize_t razer_attr_write_left_mode_wave(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    unsigned char direction = (unsigned char)simple_strtoul(buf, NULL, 10);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_effect_wave(VARSTORE, LEFT_LED, direction);
+        break;
+    }
+
+    razer_send_payload(usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Write device file "left_mode_spectrum" (for extended mouse matrix effects)
+ *
+ * Spectrum effect mode is activated whenever the file is written to
+ */
+static ssize_t razer_attr_write_left_mode_spectrum(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, LEFT_LED);
+        break;
+    }
+
+    razer_send_payload(usb_dev, &report);
+    return count;
+}
+
+/**
+ * Write device file "left_mode_reactive" (for extended mouse matrix effects)
+ *
+ * Sets reactive mode when this file is written to. A speed byte and 3 RGB bytes should be written
+ */
+static ssize_t razer_attr_write_left_mode_reactive(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    if(count == 4) {
+        unsigned char speed = (unsigned char)buf[0];
+
+        switch(usb_dev->descriptor.idProduct) {
+        case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+            report = razer_chroma_extended_matrix_effect_reactive(VARSTORE, LEFT_LED, speed, (struct razer_rgb*)&buf[1]);
+            break;
+        }
+
+        razer_send_payload(usb_dev, &report);
+
+    } else {
+        printk(KERN_WARNING "razermouse: Reactive only accepts Speed, RGB (4byte)");
+    }
+    return count;
+}
+
+/**
+ * Write device file "left_mode_breath" (for extended mouse matrix effects)
+ *
+ * Sets breathing mode by writing 1, 3 or 6 bytes
+ */
+static ssize_t razer_attr_write_left_mode_breath(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+    // TODO refactor main breathing matrix function, add in LED ID field and this nastiness goes away too!
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        switch(count) {
+        case 3: // Single colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, LEFT_LED, (struct razer_rgb*)&buf[0]);
+            break;
+
+        case 6: // Dual colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_dual(VARSTORE, LEFT_LED, (struct razer_rgb*)&buf[0], (struct razer_rgb*)&buf[3]);
+            break;
+
+        default: // "Random" colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_random(VARSTORE, LEFT_LED);
+            break;
+        }
+        break;
+    }
+
+    report.transaction_id.id = 0x3f;
+    razer_send_payload(usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Write device file "left_mode_static" (for extended mouse matrix effects)
+ *
+ * Set the mouse to static mode when 3 RGB bytes are written
+ */
+static ssize_t razer_attr_write_left_mode_static(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    if(count == 3) {
+        switch(usb_dev->descriptor.idProduct) {
+        case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+            report = razer_chroma_extended_matrix_effect_static(VARSTORE, LEFT_LED, (struct razer_rgb*)&buf[0]);
+            break;
+        }
+
+        razer_send_payload(usb_dev, &report);
+    } else {
+        printk(KERN_WARNING "razermouse: Static mode only accepts RGB (3byte)");
+    }
+
+    return count;
+}
+
+/**
+ * Write device file "left_mode_none" (for extended mouse matrix effects)
+ *
+ * No effect is activated whenever this file is written to
+ */
+static ssize_t razer_attr_write_left_mode_none(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_effect_none(VARSTORE, LEFT_LED);
+        break;
+    }
+
+    razer_send_payload(usb_dev, &report);
+    return count;
+}
+
+/**
+ * Write device file "right_mode_wave" (for extended mouse matrix effects)
+ *
+ * Wave effect mode is activated whenever the file is written to
+ */
+static ssize_t razer_attr_write_right_mode_wave(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    unsigned char direction = (unsigned char)simple_strtoul(buf, NULL, 10);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_effect_wave(VARSTORE, RIGHT_LED, direction);
+        break;
+    }
+
+    razer_send_payload(usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Write device file "right_mode_spectrum" (for extended mouse matrix effects)
+ *
+ * Spectrum effect mode is activated whenever the file is written to
+ */
+static ssize_t razer_attr_write_right_mode_spectrum(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, RIGHT_LED);
+        break;
+    }
+
+    razer_send_payload(usb_dev, &report);
+    return count;
+}
+
+/**
+ * Write device file "right_mode_reactive" (for extended mouse matrix effects)
+ *
+ * Sets reactive mode when this file is written to. A speed byte and 3 RGB bytes should be written
+ */
+static ssize_t razer_attr_write_right_mode_reactive(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    if(count == 4) {
+        unsigned char speed = (unsigned char)buf[0];
+
+        switch(usb_dev->descriptor.idProduct) {
+        case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+            report = razer_chroma_extended_matrix_effect_reactive(VARSTORE, RIGHT_LED, speed, (struct razer_rgb*)&buf[1]);
+            break;
+        }
+
+        razer_send_payload(usb_dev, &report);
+
+    } else {
+        printk(KERN_WARNING "razermouse: Reactive only accepts Speed, RGB (4byte)");
+    }
+    return count;
+}
+
+/**
+ * Write device file "right_mode_breath" (for extended mouse matrix effects)
+ *
+ * Sets breathing mode by writing 1, 3 or 6 bytes
+ */
+static ssize_t razer_attr_write_right_mode_breath(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+    // TODO refactor main breathing matrix function, add in LED ID field and this nastiness goes away too!
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        switch(count) {
+        case 3: // Single colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, RIGHT_LED, (struct razer_rgb*)&buf[0]);
+            break;
+
+        case 6: // Dual colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_dual(VARSTORE, RIGHT_LED, (struct razer_rgb*)&buf[0], (struct razer_rgb*)&buf[3]);
+            break;
+
+        default: // "Random" colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_random(VARSTORE, RIGHT_LED);
+            break;
+        }
+        break;
+    }
+
+    report.transaction_id.id = 0x3f;
+    razer_send_payload(usb_dev, &report);
+
+    return count;
+}
+
+/**
+ * Write device file "right_mode_static" (for extended mouse matrix effects)
+ *
+ * Set the mouse to static mode when 3 RGB bytes are written
+ */
+static ssize_t razer_attr_write_right_mode_static(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    if(count == 3) {
+        switch(usb_dev->descriptor.idProduct) {
+        case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+            report = razer_chroma_extended_matrix_effect_static(VARSTORE, RIGHT_LED, (struct razer_rgb*)&buf[0]);
+            break;
+        }
+
+        razer_send_payload(usb_dev, &report);
+    } else {
+        printk(KERN_WARNING "razermouse: Static mode only accepts RGB (3byte)");
+    }
+
+    return count;
+}
+
+/**
+ * Write device file "right_mode_none" (for extended mouse matrix effects)
+ *
+ * No effect is activated whenever this file is written to
+ */
+static ssize_t razer_attr_write_right_mode_none(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+    struct usb_interface *intf = to_usb_interface(dev->parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
+        report = razer_chroma_extended_matrix_effect_none(VARSTORE, RIGHT_LED);
+        break;
+    }
+
+    razer_send_payload(usb_dev, &report);
+    return count;
+}
+
+/**
  * Write device file "backlight_led_state"
  */
 static ssize_t razer_attr_write_backlight_led_state(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1928,6 +2536,32 @@ static DEVICE_ATTR(logo_matrix_effect_reactive,    0220, NULL,                  
 static DEVICE_ATTR(logo_matrix_effect_breath,      0220, NULL,                             razer_attr_write_logo_mode_breath);
 static DEVICE_ATTR(logo_matrix_effect_static,      0220, NULL,                             razer_attr_write_logo_mode_static);
 static DEVICE_ATTR(logo_matrix_effect_none,        0220, NULL,                             razer_attr_write_logo_mode_none);
+
+static DEVICE_ATTR(left_led_brightness,       0660, razer_attr_read_left_led_brightness,   razer_attr_write_left_led_brightness);
+// For old-school led commands
+static DEVICE_ATTR(left_led_state,            0660, razer_attr_read_left_led_state,        razer_attr_write_left_led_state);
+static DEVICE_ATTR(left_led_rgb,              0660, razer_attr_read_left_led_rgb,          razer_attr_write_left_led_rgb);
+static DEVICE_ATTR(left_led_effect,           0660, razer_attr_read_left_led_effect,       razer_attr_write_left_led_effect);
+// For "extended" matrix effects
+static DEVICE_ATTR(left_matrix_effect_wave,        0220, NULL,                             razer_attr_write_left_mode_wave);
+static DEVICE_ATTR(left_matrix_effect_spectrum,    0220, NULL,                             razer_attr_write_left_mode_spectrum);
+static DEVICE_ATTR(left_matrix_effect_reactive,    0220, NULL,                             razer_attr_write_left_mode_reactive);
+static DEVICE_ATTR(left_matrix_effect_breath,      0220, NULL,                             razer_attr_write_left_mode_breath);
+static DEVICE_ATTR(left_matrix_effect_static,      0220, NULL,                             razer_attr_write_left_mode_static);
+static DEVICE_ATTR(left_matrix_effect_none,        0220, NULL,                             razer_attr_write_left_mode_none);
+
+static DEVICE_ATTR(right_led_brightness,       0660, razer_attr_read_right_led_brightness,   razer_attr_write_right_led_brightness);
+// For old-school led commands
+static DEVICE_ATTR(right_led_state,            0660, razer_attr_read_right_led_state,        razer_attr_write_right_led_state);
+static DEVICE_ATTR(right_led_rgb,              0660, razer_attr_read_right_led_rgb,          razer_attr_write_right_led_rgb);
+static DEVICE_ATTR(right_led_effect,           0660, razer_attr_read_right_led_effect,       razer_attr_write_right_led_effect);
+// For "extended" matrix effects
+static DEVICE_ATTR(right_matrix_effect_wave,        0220, NULL,                             razer_attr_write_right_mode_wave);
+static DEVICE_ATTR(right_matrix_effect_spectrum,    0220, NULL,                             razer_attr_write_right_mode_spectrum);
+static DEVICE_ATTR(right_matrix_effect_reactive,    0220, NULL,                             razer_attr_write_right_mode_reactive);
+static DEVICE_ATTR(right_matrix_effect_breath,      0220, NULL,                             razer_attr_write_right_mode_breath);
+static DEVICE_ATTR(right_matrix_effect_static,      0220, NULL,                             razer_attr_write_right_mode_static);
+static DEVICE_ATTR(right_matrix_effect_none,        0220, NULL,                             razer_attr_write_right_mode_none);
 
 // For old-school led commands
 static DEVICE_ATTR(backlight_led_state,            0660, razer_attr_read_backlight_led_state, razer_attr_write_backlight_led_state);
@@ -2058,6 +2692,20 @@ static int razer_mouse_probe(struct hid_device *hdev, const struct hid_device_id
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_scroll_matrix_effect_breath);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_scroll_matrix_effect_static);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_scroll_matrix_effect_none);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_left_led_brightness);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_left_matrix_effect_wave);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_left_matrix_effect_spectrum);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_left_matrix_effect_reactive);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_left_matrix_effect_breath);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_left_matrix_effect_static);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_left_matrix_effect_none);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_right_led_brightness);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_right_matrix_effect_wave);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_right_matrix_effect_spectrum);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_right_matrix_effect_reactive);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_right_matrix_effect_breath);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_right_matrix_effect_static);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_right_matrix_effect_none);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_effect_custom);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_custom_frame);
             break;
@@ -2347,6 +2995,20 @@ static void razer_mouse_disconnect(struct hid_device *hdev)
             device_remove_file(&hdev->dev, &dev_attr_scroll_matrix_effect_breath);
             device_remove_file(&hdev->dev, &dev_attr_scroll_matrix_effect_static);
             device_remove_file(&hdev->dev, &dev_attr_scroll_matrix_effect_none);
+            device_remove_file(&hdev->dev, &dev_attr_left_led_brightness);
+            device_remove_file(&hdev->dev, &dev_attr_left_matrix_effect_wave);
+            device_remove_file(&hdev->dev, &dev_attr_left_matrix_effect_spectrum);
+            device_remove_file(&hdev->dev, &dev_attr_left_matrix_effect_reactive);
+            device_remove_file(&hdev->dev, &dev_attr_left_matrix_effect_breath);
+            device_remove_file(&hdev->dev, &dev_attr_left_matrix_effect_static);
+            device_remove_file(&hdev->dev, &dev_attr_left_matrix_effect_none);
+            device_remove_file(&hdev->dev, &dev_attr_right_led_brightness);
+            device_remove_file(&hdev->dev, &dev_attr_right_matrix_effect_wave);
+            device_remove_file(&hdev->dev, &dev_attr_right_matrix_effect_spectrum);
+            device_remove_file(&hdev->dev, &dev_attr_right_matrix_effect_reactive);
+            device_remove_file(&hdev->dev, &dev_attr_right_matrix_effect_breath);
+            device_remove_file(&hdev->dev, &dev_attr_right_matrix_effect_static);
+            device_remove_file(&hdev->dev, &dev_attr_right_matrix_effect_none);
             device_remove_file(&hdev->dev, &dev_attr_matrix_effect_custom);
             device_remove_file(&hdev->dev, &dev_attr_matrix_custom_frame);
             break;
