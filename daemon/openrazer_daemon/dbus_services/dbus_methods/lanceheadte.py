@@ -533,4 +533,3 @@ def set_right_breath_dual_lancehead_te(self, red1, green1, blue1, red2, green2, 
 
     with open(driver_path, 'wb') as driver_file:
         driver_file.write(payload)
-
