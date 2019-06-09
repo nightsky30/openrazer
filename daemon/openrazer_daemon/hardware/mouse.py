@@ -15,7 +15,7 @@ from openrazer_daemon.misc.key_event_management import NagaHexV2KeyManager as _N
 
 class RazerLanceheadTE(__RazerDeviceSpecialBrightnessSuspend):
     """
-    Class for the Razer Lancehead Tournament Edition (Wired)
+    Class for the Razer Lancehead Tournament Edition
     """
     EVENT_FILE_REGEX = re.compile(r'.*Razer_Lancehead_TE-if0(1|2)-event-kbd')
 
@@ -39,6 +39,11 @@ class RazerLanceheadTE(__RazerDeviceSpecialBrightnessSuspend):
                'set_custom_effect', 'set_key_row']
 
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1203/1206_lanceheadte.png"
+
+    # Deprecated - RAZER_URLS be removed in future.
+    RAZER_URLS = {
+        "top_img": "https://assets.razerzone.com/eeimages/support/products/1203/1206_lanceheadte.png"
+    }
 
     DPI_MAX = 16000
 

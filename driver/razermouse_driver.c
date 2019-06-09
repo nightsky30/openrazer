@@ -213,7 +213,7 @@ static ssize_t razer_attr_read_device_type(struct device *dev, struct device_att
         break;
 
     case USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED:
-        device_type = "Razer Lancehead Tournament Edition (Wired)\n";
+        device_type = "Razer Lancehead Tournament Edition\n";
         break;
 
     default:
