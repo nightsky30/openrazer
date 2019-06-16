@@ -137,16 +137,7 @@ def set_left_static_lancehead_te(self, red, green, blue):
 @endpoint('razer.device.lighting.left', 'setLeftSpectrum')
 def set_left_spectrum_lancehead_te(self):
     """
-    Set the device to pulsate
-
-    :param red: Red component
-    :type red: int
-
-    :param green: Green component
-    :type green: int
-
-    :param blue: Blue component
-    :type blue: int
+    Set the device to spectrum mode
     """
     self.logger.debug("DBus call set_left_spectrum")
 
@@ -162,7 +153,7 @@ def set_left_spectrum_lancehead_te(self):
 @endpoint('razer.device.lighting.left', 'setLeftNone')
 def set_left_none_lancehead_te(self):
     """
-    Set the device to spectrum mode
+    Set the device to effect none
     """
     self.logger.debug("DBus call set_none_effect")
 
@@ -383,16 +374,7 @@ def set_right_static_lancehead_te(self, red, green, blue):
 @endpoint('razer.device.lighting.right', 'setRightSpectrum')
 def set_right_spectrum_lancehead_te(self):
     """
-    Set the device to pulsate
-
-    :param red: Red component
-    :type red: int
-
-    :param green: Green component
-    :type green: int
-
-    :param blue: Blue component
-    :type blue: int
+    Set the device to spectrum mode
     """
     self.logger.debug("DBus call set_right_spectrum")
 
@@ -408,7 +390,7 @@ def set_right_spectrum_lancehead_te(self):
 @endpoint('razer.device.lighting.right', 'setRightNone')
 def set_right_none_lancehead_te(self):
     """
-    Set the device to spectrum mode
+    Set the device to effect none
     """
     self.logger.debug("DBus call set_none_effect")
 
