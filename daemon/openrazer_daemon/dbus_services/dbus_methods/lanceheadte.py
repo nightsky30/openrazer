@@ -2,7 +2,7 @@ from openrazer_daemon.dbus_services import endpoint
 
 
 @endpoint('razer.device.lighting.logo', 'setLogoWave', in_sig='i')
-def set_logo_wave_lancehead_te(self, direction):
+def set_logo_wave(self, direction):
     """
     Set the wave effect on the device
     :param direction: 1 - left to right, 2 right to left
@@ -23,7 +23,7 @@ def set_logo_wave_lancehead_te(self, direction):
 
 
 @endpoint('razer.device.lighting.scroll', 'setScrollWave', in_sig='i')
-def set_scroll_wave_lancehead_te(self, direction):
+def set_scroll_wave(self, direction):
     """
     Set the wave effect on the device
     :param direction: 1 - left to right, 2 right to left
@@ -44,7 +44,7 @@ def set_scroll_wave_lancehead_te(self, direction):
 
 
 @endpoint('razer.device.lighting.left', 'getLeftBrightness', out_sig='d')
-def get_left_brightness_lancehead_te(self):
+def get_left_brightness(self):
     """
     Get the device's brightness
     :return: Brightness
@@ -61,7 +61,7 @@ def get_left_brightness_lancehead_te(self):
 
 
 @endpoint('razer.device.lighting.left', 'setLeftBrightness', in_sig='d')
-def set_left_brightness_lancehead_te(self, brightness):
+def set_left_brightness(self, brightness):
     """
     Set the device's brightness
     :param brightness: Brightness
@@ -87,7 +87,7 @@ def set_left_brightness_lancehead_te(self, brightness):
 
 
 @endpoint('razer.device.lighting.left', 'setLeftWave', in_sig='i')
-def set_left_wave_lancehead_te(self, direction):
+def set_left_wave(self, direction):
     """
     Set the wave effect on the device
     :param direction: 1 - left to right, 2 right to left
@@ -108,7 +108,7 @@ def set_left_wave_lancehead_te(self, direction):
 
 
 @endpoint('razer.device.lighting.left', 'setLeftStatic', in_sig='yyy')
-def set_left_static_lancehead_te(self, red, green, blue):
+def set_left_static(self, red, green, blue):
     """
     Set the device to static colour
 
@@ -135,7 +135,7 @@ def set_left_static_lancehead_te(self, red, green, blue):
 
 
 @endpoint('razer.device.lighting.left', 'setLeftSpectrum')
-def set_left_spectrum_lancehead_te(self):
+def set_left_spectrum(self):
     """
     Set the device to spectrum mode
     """
@@ -151,7 +151,7 @@ def set_left_spectrum_lancehead_te(self):
 
 
 @endpoint('razer.device.lighting.left', 'setLeftNone')
-def set_left_none_lancehead_te(self):
+def set_left_none(self):
     """
     Set the device to effect none
     """
@@ -167,7 +167,7 @@ def set_left_none_lancehead_te(self):
 
 
 @endpoint('razer.device.lighting.left', 'setLeftReactive', in_sig='yyyy')
-def set_left_reactive_lancehead_te(self, red, green, blue, speed):
+def set_left_reactive(self, red, green, blue, speed):
     """
     Set the device to reactive effect
 
@@ -200,7 +200,7 @@ def set_left_reactive_lancehead_te(self, red, green, blue, speed):
 
 
 @endpoint('razer.device.lighting.left', 'setLeftBreathRandom')
-def set_left_breath_random_lancehead_te(self):
+def set_left_breath_random(self):
     """
     Set the device to random colour breathing effect
     """
@@ -218,7 +218,7 @@ def set_left_breath_random_lancehead_te(self):
 
 
 @endpoint('razer.device.lighting.left', 'setLeftBreathSingle', in_sig='yyy')
-def set_left_breath_single_lancehead_te(self, red, green, blue):
+def set_left_breath_single(self, red, green, blue):
     """
     Set the device to single colour breathing effect
 
@@ -245,7 +245,7 @@ def set_left_breath_single_lancehead_te(self, red, green, blue):
 
 
 @endpoint('razer.device.lighting.left', 'setLeftBreathDual', in_sig='yyyyyy')
-def set_left_breath_dual_lancehead_te(self, red1, green1, blue1, red2, green2, blue2):
+def set_left_breath_dual(self, red1, green1, blue1, red2, green2, blue2):
     """
     Set the device to dual colour breathing effect
 
@@ -281,7 +281,7 @@ def set_left_breath_dual_lancehead_te(self, red1, green1, blue1, red2, green2, b
 
 
 @endpoint('razer.device.lighting.right', 'getRightBrightness', out_sig='d')
-def get_right_brightness_lancehead_te(self):
+def get_right_brightness(self):
     """
     Get the device's brightness
     :return: Brightness
@@ -298,7 +298,7 @@ def get_right_brightness_lancehead_te(self):
 
 
 @endpoint('razer.device.lighting.right', 'setRightBrightness', in_sig='d')
-def set_right_brightness_lancehead_te(self, brightness):
+def set_right_brightness(self, brightness):
     """
     Set the device's brightness
     :param brightness: Brightness
@@ -324,7 +324,7 @@ def set_right_brightness_lancehead_te(self, brightness):
 
 
 @endpoint('razer.device.lighting.right', 'setRightWave', in_sig='i')
-def set_right_wave_lancehead_te(self, direction):
+def set_right_wave(self, direction):
     """
     Set the wave effect on the device
     :param direction: 1 - right to right, 2 right to right
@@ -345,7 +345,7 @@ def set_right_wave_lancehead_te(self, direction):
 
 
 @endpoint('razer.device.lighting.right', 'setRightStatic', in_sig='yyy')
-def set_right_static_lancehead_te(self, red, green, blue):
+def set_right_static(self, red, green, blue):
     """
     Set the device to static colour
 
@@ -372,7 +372,7 @@ def set_right_static_lancehead_te(self, red, green, blue):
 
 
 @endpoint('razer.device.lighting.right', 'setRightSpectrum')
-def set_right_spectrum_lancehead_te(self):
+def set_right_spectrum(self):
     """
     Set the device to spectrum mode
     """
@@ -388,7 +388,7 @@ def set_right_spectrum_lancehead_te(self):
 
 
 @endpoint('razer.device.lighting.right', 'setRightNone')
-def set_right_none_lancehead_te(self):
+def set_right_none(self):
     """
     Set the device to effect none
     """
@@ -404,7 +404,7 @@ def set_right_none_lancehead_te(self):
 
 
 @endpoint('razer.device.lighting.right', 'setRightReactive', in_sig='yyyy')
-def set_right_reactive_lancehead_te(self, red, green, blue, speed):
+def set_right_reactive(self, red, green, blue, speed):
     """
     Set the device to reactive effect
 
@@ -437,7 +437,7 @@ def set_right_reactive_lancehead_te(self, red, green, blue, speed):
 
 
 @endpoint('razer.device.lighting.right', 'setRightBreathRandom')
-def set_right_breath_random_lancehead_te(self):
+def set_right_breath_random(self):
     """
     Set the device to random colour breathing effect
     """
@@ -455,7 +455,7 @@ def set_right_breath_random_lancehead_te(self):
 
 
 @endpoint('razer.device.lighting.right', 'setRightBreathSingle', in_sig='yyy')
-def set_right_breath_single_lancehead_te(self, red, green, blue):
+def set_right_breath_single(self, red, green, blue):
     """
     Set the device to single colour breathing effect
 
@@ -482,7 +482,7 @@ def set_right_breath_single_lancehead_te(self, red, green, blue):
 
 
 @endpoint('razer.device.lighting.right', 'setRightBreathDual', in_sig='yyyyyy')
-def set_right_breath_dual_lancehead_te(self, red1, green1, blue1, red2, green2, blue2):
+def set_right_breath_dual(self, red1, green1, blue1, red2, green2, blue2):
     """
     Set the device to dual colour breathing effect
 
