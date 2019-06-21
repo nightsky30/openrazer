@@ -11,6 +11,8 @@ from openrazer_daemon.dbus_services.dbus_methods.deathadder_chroma import get_lo
     get_backlight_active as _da_get_backlight_active
 from openrazer_daemon.dbus_services.dbus_methods.chroma_keyboard import get_brightness as _get_backlight_brightness, set_brightness as _set_backlight_brightness
 from openrazer_daemon.misc.key_event_management import NagaHexV2KeyManager as _NagaHexV2KeyManager
+from openrazer_daemon.dbus_services.dbus_methods.lanceheadte import get_left_brightness as _get_left_brightness, get_right_brightness as _get_right_brightness, \
+    set_left_brightness as _set_left_brightness, set_right_brightness as _set_right_brightness
 
 
 class RazerLanceheadTE(__RazerDeviceSpecialBrightnessSuspend):
@@ -51,12 +53,14 @@ class RazerLanceheadTE(__RazerDeviceSpecialBrightnessSuspend):
         Get the current brightness level, store it for later and then set the brightness to 0
         """
         self.suspend_args.clear()
-        self.suspend_args['brightness'] = (_da_get_logo_brightness(self), _da_get_scroll_brightness(self))
+        self.suspend_args['brightness'] = (_da_get_logo_brightness(self), _da_get_scroll_brightness(self), _get_left_brightness(self), _get_right_brightness(self))
 
         # Todo make it context?
         self.disable_notify = True
         _da_set_logo_brightness(self, 0)
         _da_set_scroll_brightness(self, 0)
+        _set_left_brightness(self, 0)
+        _set_right_brightness(self, 0)
         self.disable_notify = False
 
     def _resume_device(self):
@@ -66,10 +70,13 @@ class RazerLanceheadTE(__RazerDeviceSpecialBrightnessSuspend):
         """
         logo_brightness = self.suspend_args.get('brightness', (100, 100))[0]
         scroll_brightness = self.suspend_args.get('brightness', (100, 100))[1]
-
+        left_row_brightness = self.suspend_args.get('brightness', (100, 100))[2]
+        right_row_brightness = self.suspend_args.get('brightness', (100, 100))[3]
         self.disable_notify = True
         _da_set_logo_brightness(self, logo_brightness)
         _da_set_scroll_brightness(self, scroll_brightness)
+        _set_left_brightness(self, left_row_brightness)
+        _set_right_brightness(self, right_row_brightness)
         self.disable_notify = False
 
 
