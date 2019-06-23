@@ -327,7 +327,7 @@ def set_right_brightness(self, brightness):
 def set_right_wave(self, direction):
     """
     Set the wave effect on the device
-    :param direction: 1 - right to right, 2 right to right
+    :param direction: 1 - left to right, 2 right to left
     :type direction: int
     """
     self.logger.debug("DBus call set_wave_effect")
