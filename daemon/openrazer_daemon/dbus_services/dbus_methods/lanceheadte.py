@@ -19,7 +19,7 @@ def set_logo_wave(self, direction):
         direction = self.WAVE_DIRS[0]
 
     with open(driver_path, 'w') as driver_file:
-        driver_file.write(str(direction))
+        driver_file.write(str(direction - 1))
 
 
 @endpoint('razer.device.lighting.scroll', 'setScrollWave', in_sig='i')
@@ -40,7 +40,7 @@ def set_scroll_wave(self, direction):
         direction = self.WAVE_DIRS[0]
 
     with open(driver_path, 'w') as driver_file:
-        driver_file.write(str(direction))
+        driver_file.write(str(direction - 1))
 
 
 @endpoint('razer.device.lighting.left', 'getLeftBrightness', out_sig='d')
@@ -104,7 +104,7 @@ def set_left_wave(self, direction):
         direction = self.WAVE_DIRS[0]
 
     with open(driver_path, 'w') as driver_file:
-        driver_file.write(str(direction))
+        driver_file.write(str(direction - 1))
 
 
 @endpoint('razer.device.lighting.left', 'setLeftStatic', in_sig='yyy')
@@ -341,7 +341,7 @@ def set_right_wave(self, direction):
         direction = self.WAVE_DIRS[0]
 
     with open(driver_path, 'w') as driver_file:
-        driver_file.write(str(direction))
+        driver_file.write(str(direction - 1))
 
 
 @endpoint('razer.device.lighting.right', 'setRightStatic', in_sig='yyy')
