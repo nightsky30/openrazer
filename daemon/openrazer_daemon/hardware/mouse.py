@@ -24,6 +24,7 @@ class RazerLanceheadTE(__RazerDeviceSpecialBrightnessSuspend):
     USB_VID = 0x1532
     USB_PID = 0x0060
     HAS_MATRIX = True
+    WAVE_DIRS = (1, 2)
     MATRIX_DIMS = [1, 16]
     METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate', 'get_logo_brightness', 'set_logo_brightness', 'get_scroll_brightness', 'set_scroll_brightness',
                'get_left_brightness', 'set_left_brightness', 'get_right_brightness', 'set_right_brightness',
