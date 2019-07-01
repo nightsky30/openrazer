@@ -1545,7 +1545,7 @@ static ssize_t razer_attr_write_scroll_mode_wave(struct device *dev, struct devi
 {
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
-    unsigned char direction = (unsigned char)simple_strtoul(buf, NULL, 10);
+    unsigned char direction = clamp_u8(simple_strtoul(buf, NULL, 10), 0x00, 0x01);
     struct razer_report report = {0};
 
     switch(usb_dev->descriptor.idProduct) {
@@ -1744,7 +1744,7 @@ static ssize_t razer_attr_write_logo_mode_wave(struct device *dev, struct device
 {
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
-    unsigned char direction = (unsigned char)simple_strtoul(buf, NULL, 10);
+    unsigned char direction = clamp_u8(simple_strtoul(buf, NULL, 10), 0, 1);
     struct razer_report report = {0};
 
     switch(usb_dev->descriptor.idProduct) {
@@ -1941,7 +1941,7 @@ static ssize_t razer_attr_write_left_mode_wave(struct device *dev, struct device
 {
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
-    unsigned char direction = (unsigned char)simple_strtoul(buf, NULL, 10);
+    unsigned char direction = clamp_u8(simple_strtoul(buf, NULL, 10), 0, 1);
     struct razer_report report = {0};
 
     switch(usb_dev->descriptor.idProduct) {
