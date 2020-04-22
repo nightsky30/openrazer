@@ -16,6 +16,9 @@
 
 #define USB_INTERFACE_PROTOCOL_CONTROLLER 208
 
+#define RAZER_CONTROLLER_WAIT_MIN_US 600
+#define RAZER_CONTROLLER_WAIT_MAX_US 800
+
 struct razer_controller_device {
     struct usb_device *usb_dev;
     struct input_dev *input;

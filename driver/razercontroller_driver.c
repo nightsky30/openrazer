@@ -45,7 +45,7 @@ MODULE_LICENSE(DRIVER_LICENSE);
  */
 static int razer_get_report(struct usb_device *usb_dev, struct razer_report *request_report, struct razer_report *response_report)
 {
-    return razer_get_usb_response(usb_dev, 0x00, request_report, 0x00, response_report, 600, 800);
+    return razer_get_usb_response(usb_dev, 0x00, request_report, 0x00, response_report, RAZER_CONTROLLER_WAIT_MIN_US, RAZER_CONTROLLER_WAIT_MAX_US);
 }
 
 /**
