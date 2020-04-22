@@ -34,6 +34,11 @@ ATTRS{idProduct}=="0215", \
     ATTRS{idVendor}=="1532", \
     ENV{ID_RAZER_CHROMA}="1", ENV{RAZER_DRIVER}="razercore"
 
+# Controllers
+ATTRS{idProduct}=="0a15", \
+    ATTRS{idVendor}=="1532", \
+    ENV{ID_RAZER_CHROMA}="1", ENV{RAZER_DRIVER}="razercontroller"
+
 # Get out if no match
 ENV{ID_RAZER_CHROMA}!="1", GOTO="razer_end"
 

@@ -118,6 +118,11 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Kraken 7.1                              |  1532:0506  |
 | Razer Kraken 7.1 V2                           |  1532:0510  |
 
+### Controllers
+| Device                                        | USB VID:PID |
+| --------------------------------------------- | ----------- |
+| Razer Wolverine Tournament Edition            |  1532:0A15  |
+
 ### Misc
 | Device                                        | USB VID:PID |
 | --------------------------------------------- | ----------- |
