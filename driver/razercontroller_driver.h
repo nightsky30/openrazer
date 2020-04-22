@@ -14,6 +14,8 @@
 
 #define USB_DEVICE_ID_RAZER_WOLVERINE_TOURNAMENT_EDITION 0x0A15
 
+#define USB_INTERFACE_PROTOCOL_CONTROLLER 208
+
 struct razer_controller_device {
     struct usb_device *usb_dev;
     struct input_dev *input;
