@@ -768,7 +768,7 @@ static int razer_controller_probe(struct hid_device *hdev, const struct hid_devi
     // Init data
     razer_controller_init(dev, intf, hdev);
 
-    if(dev->usb_interface_protocol == USB_INTERFACE_PROTOCOL_MOUSE) {
+    if(dev->usb_interface_protocol == USB_INTERFACE_PROTOCOL_CONTROLLER) {
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_version);                               // Get driver version
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_test);                                  // Test mode
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_device_type);                           // Get string of device type
@@ -823,7 +823,7 @@ static void razer_controller_disconnect(struct hid_device *hdev)
 
     dev = hid_get_drvdata(hdev);
 
-    if(dev->usb_interface_protocol == USB_INTERFACE_PROTOCOL_MOUSE) {
+    if(dev->usb_interface_protocol == USB_INTERFACE_PROTOCOL_CONTROLLER) {
         device_remove_file(&hdev->dev, &dev_attr_version);                               // Get driver version
         device_remove_file(&hdev->dev, &dev_attr_test);                                  // Test mode
         device_remove_file(&hdev->dev, &dev_attr_device_type);                           // Get string of device type
