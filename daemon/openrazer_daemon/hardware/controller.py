@@ -17,9 +17,9 @@ class RazerWolverineTE(_RazerDeviceBrightnessSuspend):
     HAS_MATRIX = True
     WAVE_DIRS = (1, 2)
     MATRIX_DIMS = [1, 16]
-    METHODS = ['get_device_type_accessory',
-               'set_static_effect', 'set_spectrum_effect', 'set_wave_effect', 'set_none_effect', 'set_breath_single_effect', 'set_breath_dual_effect', 'set_breath_random_effect',
-               'set_custom_effect', 'set_key_row']
+    METHODS = ['get_firmware', 'get_matrix_dims', 'has_matrix', 'get_device_name', 'get_brightness', 'set_brightness', 'set_wave_effect', 'set_static_effect', 'set_spectrum_effect',
+               'set_reactive_effect', 'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect',
+               'set_custom_effect', 'set_key_row', 'get_device_type_controller']
 
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1271/1271_wolverine_tournament_edition.png"
 
