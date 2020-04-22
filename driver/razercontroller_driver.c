@@ -158,12 +158,12 @@ static ssize_t razer_attr_write_mode_spectrum(struct device *dev, struct device_
     struct razer_report report = { 0 };
 
     switch (device->usb_dev->descriptor.idProduct) {
-    case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+    case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
         report = razer_chroma_standard_matrix_effect_spectrum(VARSTORE, BACKLIGHT_LED);
         break;
 
-    case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-    case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+    case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+    case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
         report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, ZERO_LED);
         break;
 
@@ -192,12 +192,12 @@ static ssize_t razer_attr_write_mode_none(struct device *dev, struct device_attr
     struct razer_report report = { 0 };
 
     switch (device->usb_dev->descriptor.idProduct) {
-    case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+    case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
         report = razer_chroma_standard_matrix_effect_none(VARSTORE, BACKLIGHT_LED);
         break;
 
-    case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-    case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+    case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+    case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
         report = razer_chroma_extended_matrix_effect_none(VARSTORE, ZERO_LED);
         break;
 
@@ -255,12 +255,12 @@ static ssize_t razer_attr_write_mode_custom(struct device *dev, struct device_at
     struct razer_report report = { 0 };
 
     switch (device->usb_dev->descriptor.idProduct) {
-    case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+    case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
         report = razer_chroma_standard_matrix_effect_custom_frame(NOSTORE);
         break;
 
-    case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-    case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+    case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+    case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
         report = razer_chroma_extended_matrix_effect_custom_frame();
         break;
 
@@ -288,12 +288,12 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
 
     if(count == 3) {
         switch (device->usb_dev->descriptor.idProduct) {
-        case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+        case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
             report = razer_chroma_standard_matrix_effect_static(VARSTORE, BACKLIGHT_LED, (struct razer_rgb*) & buf[0]);
             break;
 
-        case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-        case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+        case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+        case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
             report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
             break;
 
@@ -327,12 +327,12 @@ static ssize_t razer_attr_write_mode_wave(struct device *dev, struct device_attr
     struct razer_report report = { 0 };
 
     switch (device->usb_dev->descriptor.idProduct) {
-    case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+    case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
         report = razer_chroma_standard_matrix_effect_wave(VARSTORE, BACKLIGHT_LED, direction);
         break;
 
-    case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-    case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+    case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+    case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
         report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
         break;
 
@@ -363,12 +363,12 @@ static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_at
     switch(count) {
     case 3: // Single colour mode
         switch (device->usb_dev->descriptor.idProduct) {
-        case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+        case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
             report = razer_chroma_standard_matrix_effect_breathing_single(VARSTORE, BACKLIGHT_LED, (struct razer_rgb*) & buf[0]);
             break;
 
-        case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-        case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+        case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+        case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
             report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
             break;
 
@@ -380,12 +380,12 @@ static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_at
 
     case 6: // Dual colour mode
         switch (device->usb_dev->descriptor.idProduct) {
-        case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+        case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
             report = razer_chroma_standard_matrix_effect_breathing_dual(VARSTORE, BACKLIGHT_LED, (struct razer_rgb*) & buf[0], (struct razer_rgb*) & buf[3]);
             break;
 
-        case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-        case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+        case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+        case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
             report = razer_chroma_extended_matrix_effect_breathing_dual(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0], (struct razer_rgb*) & buf[3]);
             break;
 
@@ -397,12 +397,12 @@ static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_at
 
     default: // "Random" colour mode
         switch (device->usb_dev->descriptor.idProduct) {
-        case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+        case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
             report = razer_chroma_standard_matrix_effect_breathing_random(VARSTORE, BACKLIGHT_LED);
             break;
 
-        case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-        case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+        case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+        case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
             report = razer_chroma_extended_matrix_effect_breathing_random(VARSTORE, ZERO_LED);
             break;
 
@@ -471,12 +471,12 @@ static ssize_t razer_attr_write_set_key_row(struct device *dev, struct device_at
         }
 
         switch (device->usb_dev->descriptor.idProduct) {
-        case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+        case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
             report = razer_chroma_misc_one_row_set_custom_frame(start_col, stop_col, (unsigned char*)&buf[offset]);
             break;
 
-        case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-        case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+        case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+        case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
             report = razer_chroma_extended_matrix_set_custom_frame(row_id, start_col, stop_col, (unsigned char*)&buf[offset]);
             break;
 
@@ -510,12 +510,12 @@ static ssize_t razer_attr_read_get_serial(struct device *dev, struct device_attr
     char serial_string[51];
 
     switch (device->usb_dev->descriptor.idProduct) {
-    case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+    case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
         strncpy(&serial_string[0], &device->serial[0], sizeof(serial_string));
         break;
 
-    case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-    case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+    case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+    case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
         response_report = razer_send_payload(device->usb_dev, &report);
         strncpy(&serial_string[0], &response_report.arguments[0], 22);
         serial_string[22] = '\0';
@@ -616,12 +616,12 @@ static ssize_t razer_attr_write_set_brightness(struct device *dev, struct device
     }
 
     switch (device->usb_dev->descriptor.idProduct) {
-    case USB_DEVICE_ID_RAZER_CHROMA_MUG:
+    case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
         report = razer_chroma_standard_set_led_brightness(VARSTORE, BACKLIGHT_LED, brightness);
         break;
 
-    case USB_DEVICE_ID_RAZER_CHROMA_HDK:
-    case USB_DEVICE_ID_RAZER_CHROMA_BASE:
+    case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+    case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
         report = razer_chroma_extended_matrix_brightness(VARSTORE, ZERO_LED, brightness);
         break;
 
