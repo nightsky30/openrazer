@@ -6,4 +6,4 @@ razermousemat-y := razermousemat_driver.o razercommon.o razerchromacommon.o
 razerkraken-y := razerkraken_driver.o razercommon.o
 razeraccessory-y := razeraccessory_driver.o razercommon.o razerchromacommon.o
 razercore-y := razercore_driver.o razercommon.o razerchromacommon.o
-razercontroller-y := razercore_driver.o razercommon.o razerchromacommon.o
+razercontroller-y := razercontroller_driver.o razercommon.o razerchromacommon.o
