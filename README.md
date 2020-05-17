@@ -86,6 +86,8 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Naga Hex V2                             |  1532:0050  |
 | Razer Naga Chroma                             |  1532:0053  |
 | Razer DeathAdder 3500                         |  1532:0054  |
+| Razer Lancehead (Wired)                       |  1532:0059  |
+| Razer Lancehead (Wireless)                    |  1532:005A  |
 | Razer Abyssus V2                              |  1532:005B  |
 | Razer DeathAdder Elite                        |  1532:005C  |
 | Razer Abyssus 2000                            |  1532:005E  |
@@ -96,11 +98,15 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Abyssus Essential                       |  1532:006B  |
 | Razer Mamba Elite (Wired)                     |  1532:006C  |
 | Razer DeathAdder Essential                    |  1532:006E  |
+| Razer Lancehead Wireless (Receiver)           |  1532:006F  |
+| Razer Lancehead Wireless (Wired)              |  1532:0070  |
 | Razer DeathAdder Essential (White Edition)    |  1532:0071  |
 | Razer Mamba Wireless (Receiver)               |  1532:0072  |
 | Razer Mamba Wireless (Wired)                  |  1532:0073  |
+| Razer Viper                                   |  1532:0078  |
 | Razer Viper Ultimate (Wired)                  |  1532:007A  |
 | Razer Viper Ultimate (Wireless)               |  1532:007B  |
+| Razer DeathAdder V2                           |  1532:0084  |
 
 ### Mousemats
 | Device                                        | USB VID:PID |
@@ -117,6 +123,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Kraken 7.1 Chroma                       |  1532:0504  |
 | Razer Kraken 7.1                              |  1532:0506  |
 | Razer Kraken 7.1 V2                           |  1532:0510  |
+| Razer Kraken Ultimate                         |  1532:0527  |
 
 ### Controllers
 | Device                                        | USB VID:PID |
@@ -133,6 +140,8 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Tartarus Chroma                         |  1532:0208  |
 | Razer Core                                    |  1532:0215  |
 | Razer Tartarus V2                             |  1532:022B  |
+| Razer Nommo Chroma                            |  1532:0517  |
+| Razer Nommo Pro                               |  1532:0518  |
 | Razer Chroma Mug Holder                       |  1532:0F07  |
 | Razer Base Station Chroma                     |  1532:0F08  |
 | Razer Chroma Hardware Development Kit (HDK)   |  1532:0F09  |

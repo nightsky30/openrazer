@@ -652,8 +652,20 @@ static ssize_t razer_attr_read_tartarus_profile_led_red(struct device *dev, stru
 {
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
-    struct razer_report report = razer_chroma_standard_get_led_state(VARSTORE, RED_PROFILE_LED);
-    struct razer_report response = razer_send_payload(usb_dev, &report);
+    struct razer_report report = {0};
+    struct razer_report response = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_ORBWEAVER_CHROMA:
+    case USB_DEVICE_ID_RAZER_TARTARUS_CHROMA:
+        report = razer_chroma_standard_get_led_state(VARSTORE, BLUE_PROFILE_LED);
+        break;
+    default:
+        report = razer_chroma_standard_get_led_state(VARSTORE, RED_PROFILE_LED);
+        break;
+    }
+
+    response = razer_send_payload(usb_dev, &report);
 
     return sprintf(buf, "%d\n", response.arguments[2]);
 }
@@ -667,8 +679,20 @@ static ssize_t razer_attr_read_tartarus_profile_led_green(struct device *dev, st
 {
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
-    struct razer_report report = razer_chroma_standard_get_led_state(VARSTORE, GREEN_PROFILE_LED);
-    struct razer_report response = razer_send_payload(usb_dev, &report);
+    struct razer_report report = {0};
+    struct razer_report response = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_ORBWEAVER_CHROMA:
+    case USB_DEVICE_ID_RAZER_TARTARUS_CHROMA:
+        report = razer_chroma_standard_get_led_state(VARSTORE, RED_PROFILE_LED);
+        break;
+    default:
+        report = razer_chroma_standard_get_led_state(VARSTORE, GREEN_PROFILE_LED);
+        break;
+    }
+
+    response = razer_send_payload(usb_dev, &report);
 
     return sprintf(buf, "%d\n", response.arguments[2]);
 }
@@ -682,8 +706,20 @@ static ssize_t razer_attr_read_tartarus_profile_led_blue(struct device *dev, str
 {
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
-    struct razer_report report = razer_chroma_standard_get_led_state(VARSTORE, BLUE_PROFILE_LED);
-    struct razer_report response = razer_send_payload(usb_dev, &report);
+    struct razer_report report = {0};
+    struct razer_report response = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_ORBWEAVER_CHROMA:
+    case USB_DEVICE_ID_RAZER_TARTARUS_CHROMA:
+        report = razer_chroma_standard_get_led_state(VARSTORE, GREEN_PROFILE_LED);
+        break;
+    default:
+        report = razer_chroma_standard_get_led_state(VARSTORE, BLUE_PROFILE_LED);
+        break;
+    }
+
+    response = razer_send_payload(usb_dev, &report);
 
     return sprintf(buf, "%d\n", response.arguments[2]);
 }
@@ -696,7 +732,17 @@ static ssize_t razer_attr_write_tartarus_profile_led_red(struct device *dev, str
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
     unsigned char enabled = (unsigned char)simple_strtoul(buf, NULL, 10);
-    struct razer_report report = razer_chroma_standard_set_led_state(VARSTORE, RED_PROFILE_LED, enabled);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_ORBWEAVER_CHROMA:
+    case USB_DEVICE_ID_RAZER_TARTARUS_CHROMA:
+        report = razer_chroma_standard_set_led_state(VARSTORE, BLUE_PROFILE_LED, enabled);
+        break;
+    default:
+        report = razer_chroma_standard_set_led_state(VARSTORE, RED_PROFILE_LED, enabled);
+        break;
+    }
 
     razer_send_payload(usb_dev, &report);
 
@@ -711,7 +757,17 @@ static ssize_t razer_attr_write_tartarus_profile_led_green(struct device *dev, s
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
     unsigned char enabled = (unsigned char)simple_strtoul(buf, NULL, 10);
-    struct razer_report report = razer_chroma_standard_set_led_state(VARSTORE, GREEN_PROFILE_LED, enabled);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_ORBWEAVER_CHROMA:
+    case USB_DEVICE_ID_RAZER_TARTARUS_CHROMA:
+        report = razer_chroma_standard_set_led_state(VARSTORE, RED_PROFILE_LED, enabled);
+        break;
+    default:
+        report = razer_chroma_standard_set_led_state(VARSTORE, GREEN_PROFILE_LED, enabled);
+        break;
+    }
 
     razer_send_payload(usb_dev, &report);
     return count;
@@ -725,7 +781,17 @@ static ssize_t razer_attr_write_tartarus_profile_led_blue(struct device *dev, st
     struct usb_interface *intf = to_usb_interface(dev->parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
     unsigned char enabled = (unsigned char)simple_strtoul(buf, NULL, 10);
-    struct razer_report report = razer_chroma_standard_set_led_state(VARSTORE, BLUE_PROFILE_LED, enabled);
+    struct razer_report report = {0};
+
+    switch(usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_ORBWEAVER_CHROMA:
+    case USB_DEVICE_ID_RAZER_TARTARUS_CHROMA:
+        report = razer_chroma_standard_set_led_state(VARSTORE, GREEN_PROFILE_LED, enabled);
+        break;
+    default:
+        report = razer_chroma_standard_set_led_state(VARSTORE, BLUE_PROFILE_LED, enabled);
+        break;
+    }
 
     razer_send_payload(usb_dev, &report);
     return count;
@@ -2009,7 +2075,7 @@ static int razer_raw_event(struct hid_device *hdev, struct hid_report *report, u
     }
 
     // The event were looking for is 16 bytes long and starts with 0x04
-    if(intf->cur_altsetting->desc.bInterfaceProtocol == USB_INTERFACE_PROTOCOL_KEYBOARD && data[0] == 0x04) {
+    if(intf->cur_altsetting->desc.bInterfaceProtocol == USB_INTERFACE_PROTOCOL_KEYBOARD && size == 16 && data[0] == 0x04) {
         // Convert 04... to 0100...
         int index = size-1; // This way we start at 2nd last value, does subtract 1 from the 15key rollover though (not an issue cmon)
         u8 cur_value = 0x00;

@@ -3,7 +3,7 @@ Daemon class
 
 This class is the main core of the daemon, this serves a basic dbus module to control the main bit of the daemon
 """
-__version__ = '2.7.0'
+__version__ = '2.8.0'
 
 import configparser
 import logging
@@ -163,7 +163,7 @@ class RazerDaemon(DBusService):
 
         if log_dir is not None:
             log_file = os.path.join(log_dir, 'razer.log')
-            file_logger = logging.handlers.RotatingFileHandler(log_file, maxBytes=16777216, backupCount=10)  # 16MiB
+            file_logger = logging.handlers.RotatingFileHandler(log_file, maxBytes=1048576, backupCount=1)  # 1 MiB
             file_logger.setLevel(log_level)
             file_logger.setFormatter(formatter)
             logger.addHandler(file_logger)
@@ -255,7 +255,7 @@ class RazerDaemon(DBusService):
             self._config[section] = {}
 
         self._config['DEFAULT'] = {
-            'verbose_logging': True,
+            'verbose_logging': False,
             'sync_effects_enabled': True,
             'devices_off_on_screensaver': True,
             'key_statistics': False,
