@@ -788,7 +788,7 @@ class RazerHuntsmanTournamentEdition(_RippleKeyboard):
     USB_PID = 0x0243
     HAS_MATRIX = True
     WAVE_DIRS = (0, 1)
-    MATRIX_DIMS = [6, 16]
+    MATRIX_DIMS = [6, 18]
     METHODS = ['get_device_type_keyboard', 'set_wave_effect', 'set_static_effect', 'set_spectrum_effect',
                'set_reactive_effect', 'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect',
                'set_custom_effect', 'set_key_row', 'get_game_mode', 'set_game_mode', 'get_macro_mode', 'set_macro_mode',
@@ -879,6 +879,27 @@ class RazerCynosaChroma(_RippleKeyboard):
     # Deprecated - RAZER_URLS be removed in future.
     RAZER_URLS = {
         "top_img": "https://assets.razerzone.com/eeimages/support/products/1256/1256_cynosa_chroma.png"
+    }
+
+
+class RazerCynosaLite(_RippleKeyboard):
+    """
+    Class for the Razer Cynosa Lite
+    """
+    EVENT_FILE_REGEX = re.compile(r'.*Cynosa_Lite(-if01)?-event-kbd')
+
+    USB_VID = 0x1532
+    USB_PID = 0x023F
+    METHODS = ['get_device_type_keyboard', 'set_static_effect', 'set_spectrum_effect',
+               'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect',
+               'get_game_mode', 'set_game_mode', 'get_macro_mode', 'set_macro_mode',
+               'get_macro_effect', 'set_macro_effect', 'get_macros', 'delete_macro', 'add_macro']
+
+    DEVICE_IMAGE = "https://assets2.razerzone.com/images/og-image/cynosa-lite-OGimage.jpg"
+
+    # Deprecated - RAZER_URLS be removed in future.
+    RAZER_URLS = {
+        "top_img": "https://assets2.razerzone.com/images/og-image/cynosa-lite-OGimage.jpg"
     }
 
 
