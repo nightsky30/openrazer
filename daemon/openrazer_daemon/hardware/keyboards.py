@@ -719,11 +719,6 @@ class RazerCynosaChromaPro(_RippleKeyboard):
 
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1257/1257_cynosa_chroma_pro_alt.png"
 
-    # Deprecated - RAZER_URLS be removed in future.
-    RAZER_URLS = {
-        "top_img": "https://assets.razerzone.com/eeimages/support/products/1257/1257_cynosa_chroma_pro_alt.png"
-    }
-
 
 class RazerCynosaLite(_RippleKeyboard):
     """
