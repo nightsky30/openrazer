@@ -61,6 +61,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Blade 15 Studio Edition (2019)          |  1532:024D  |
 | Razer Blade Stealth (Early 2020)              |  1532:0252  |
 | Razer Blade 15 Advanced (2020)                |  1532:0253  |
+| Razer Blade 15 (Early 2020) Base              |  1532:0255  |
 
 ### Mice
 | Device                                        | USB VID:PID |
@@ -87,6 +88,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Mamba Tournament Edition                |  1532:0046  |
 | Razer Orochi (Wired)                          |  1532:0048  |
 | Razer Diamondback Chroma                      |  1532:004C  |
+| Razer DeathAdder 2000                         |  1532:004F  |
 | Razer Naga Hex V2                             |  1532:0050  |
 | Razer Naga Chroma                             |  1532:0053  |
 | Razer DeathAdder 3500                         |  1532:0054  |
@@ -110,6 +112,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Viper                                   |  1532:0078  |
 | Razer Viper Ultimate (Wired)                  |  1532:007A  |
 | Razer Viper Ultimate (Wireless)               |  1532:007B  |
+| Razer Basilisk X HyperSpeed                   |  1532:0083  |
 | Razer DeathAdder V2                           |  1532:0084  |
 
 ### Mousemats

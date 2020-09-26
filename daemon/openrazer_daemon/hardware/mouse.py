@@ -620,6 +620,60 @@ class RazerDeathAdderChroma(__RazerDeviceSpecialBrightnessSuspend):
         self.disable_notify = False
 
 
+class RazerDeathAdder2000(__RazerDeviceSpecialBrightnessSuspend):
+    """
+    Class for the Razer DeathAdder 2000
+    """
+    USB_VID = 0x1532
+    USB_PID = 0x004F
+    METHODS = ['get_device_type_mouse',
+               'set_logo_active', 'get_logo_active', 'get_logo_effect', 'get_logo_brightness', 'set_logo_brightness', 'set_logo_static_mono', 'set_logo_pulsate_mono',
+               'set_scroll_active', 'get_scroll_active', 'get_scroll_effect', 'get_scroll_brightness', 'set_scroll_brightness', 'set_scroll_static_mono', 'set_scroll_pulsate_mono',
+               'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate']
+
+    DEVICE_IMAGE = "http://cn.razerzone.com/assets/product/gallery/deathadder-2000-gallery-1.png"
+
+    DPI_MAX = 2000
+
+    def __init__(self, *args, **kwargs):
+        super(RazerDeathAdder2000, self).__init__(*args, **kwargs)
+
+        # Set brightness to max and LEDs to on, on startup
+        _da_set_logo_brightness(self, 100)
+        _da_set_scroll_brightness(self, 100)
+        _da_set_logo_active(self, True)
+        _da_set_scroll_active(self, True)
+
+    def _suspend_device(self):
+        """
+        Suspend the device
+
+        Get the current brightness level, store it for later and then set the brightness to 0
+        """
+        self.suspend_args.clear()
+        self.suspend_args['brightness'] = (_da_get_logo_brightness(self), _da_get_scroll_brightness(self))
+
+        # Todo make it context?
+        self.disable_notify = True
+        _da_set_logo_brightness(self, 0)
+        _da_set_scroll_brightness(self, 0)
+        self.disable_notify = False
+
+    def _resume_device(self):
+        """
+        Resume the device
+
+        Get the last known brightness and then set the brightness
+        """
+        logo_brightness = self.suspend_args.get('brightness', (100, 100))[0]
+        scroll_brightness = self.suspend_args.get('brightness', (100, 100))[1]
+
+        self.disable_notify = True
+        _da_set_logo_brightness(self, logo_brightness)
+        _da_set_scroll_brightness(self, scroll_brightness)
+        self.disable_notify = False
+
+
 class RazerDeathAdder2013(__RazerDeviceSpecialBrightnessSuspend):
     """
     Class for the Razer DeathAdder 2013
@@ -1484,15 +1538,12 @@ class RazerViperUltimateWired(__RazerDeviceSpecialBrightnessSuspend):
 
     USB_VID = 0x1532
     USB_PID = 0x007A
-    HAS_MATRIX = True
-    WAVE_DIRS = (1, 2)
-    MATRIX_DIMS = [1, 20]
-    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate',
+    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate', 'get_logo_brightness', 'set_logo_brightness',
+               # Battery
+               'get_battery', 'is_charging', 'set_idle_time', 'set_low_battery_threshold',
                # Logo
-               'get_logo_brightness', 'set_logo_brightness', 'set_logo_wave',
-               'set_logo_static_naga_hex_v2', 'set_logo_spectrum_naga_hex_v2', 'set_logo_none_naga_hex_v2',
-               'set_logo_reactive_naga_hex_v2', 'set_logo_breath_random_naga_hex_v2',
-               'set_logo_breath_single_naga_hex_v2', 'set_logo_breath_dual_naga_hex_v2']
+               'set_logo_static_naga_hex_v2', 'set_logo_spectrum_naga_hex_v2', 'set_logo_none_naga_hex_v2', 'set_logo_reactive_naga_hex_v2',
+               'set_logo_breath_random_naga_hex_v2', 'set_logo_breath_single_naga_hex_v2', 'set_logo_breath_dual_naga_hex_v2']
 
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1577/ee_photo.png"
 
@@ -1532,6 +1583,21 @@ class RazerViperUltimateWireless(RazerViperUltimateWired):
 
     USB_VID = 0x1532
     USB_PID = 0x007B
+    METHODS = RazerViperUltimateWired.METHODS + ['set_charge_effect', 'set_charge_colour']
+
+    def __init__(self, *args, **kwargs):
+        super(RazerViperUltimateWireless, self).__init__(*args, **kwargs)
+
+        self._battery_manager = _BatteryManager(self, self._device_number, 'Razer Viper Ultimate Wireless')
+        self._battery_manager.active = self.config.getboolean('Startup', 'mouse_battery_notifier', fallback=False)
+
+    def _close(self):
+        """
+        Close the key manager
+        """
+        super(RazerViperUltimateWireless, self)._close()
+
+        self._battery_manager.close()
 
 
 class RazerViper(__RazerDeviceSpecialBrightnessSuspend):
@@ -1542,15 +1608,10 @@ class RazerViper(__RazerDeviceSpecialBrightnessSuspend):
 
     USB_VID = 0x1532
     USB_PID = 0x0078
-    HAS_MATRIX = True
-    WAVE_DIRS = (1, 2)
-    MATRIX_DIMS = [1, 16]
-    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate',
+    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate', 'get_logo_brightness', 'set_logo_brightness',
                # Logo
-               'get_logo_brightness', 'set_logo_brightness', 'set_logo_wave',
-               'set_logo_static_naga_hex_v2', 'set_logo_spectrum_naga_hex_v2', 'set_logo_none_naga_hex_v2',
-               'set_logo_reactive_naga_hex_v2', 'set_logo_breath_random_naga_hex_v2',
-               'set_logo_breath_single_naga_hex_v2', 'set_logo_breath_dual_naga_hex_v2']
+               'set_logo_static_naga_hex_v2', 'set_logo_spectrum_naga_hex_v2', 'set_logo_none_naga_hex_v2', 'set_logo_reactive_naga_hex_v2',
+               'set_logo_breath_random_naga_hex_v2', 'set_logo_breath_single_naga_hex_v2', 'set_logo_breath_dual_naga_hex_v2']
 
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1539/1539_viper.png"
 
@@ -1813,3 +1874,38 @@ class RazerDeathAdderV2(__RazerDeviceSpecialBrightnessSuspend):
         _da_set_logo_brightness(self, logo_brightness)
         _da_set_scroll_brightness(self, scroll_brightness)
         self.disable_notify = False
+
+
+class RazerBasiliskXHyperSpeed(__RazerDevice):
+    """
+    Class for the Razer Basilisk X HyperSpeed
+    """
+    EVENT_FILE_REGEX = re.compile(r'.*Razer_Basilisk_X_HyperSpeed-if0(1|2)-event-kbd')
+
+    USB_VID = 0x1532
+    USB_PID = 0x0083
+    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy',
+               'get_poll_rate', 'set_poll_rate', 'get_battery', 'is_charging',
+               'get_idle_time', 'set_idle_time', 'get_low_battery_threshold',
+               'set_low_battery_threshold']
+
+    DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1589/1589_basilisk_x__hyperspeed.png"
+
+    DPI_MAX = 16000
+
+    def __init__(self, *args, **kwargs):
+        super(RazerBasiliskXHyperSpeed, self).__init__(*args, **kwargs)
+
+        self._battery_manager = _BatteryManager(
+            self, self._device_number, 'Razer Basilisk X HyperSpeed')
+
+        self._battery_manager.active = self.config.getboolean(
+            'Startup', 'mouse_battery_notifier', fallback=False)
+
+    def _close(self):
+        """
+        Close the key manager
+        """
+        super(RazerBasiliskXHyperSpeed, self)._close()
+
+        self._battery_manager.close()
