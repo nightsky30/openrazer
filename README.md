@@ -62,6 +62,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Blade Stealth (Early 2020)              |  1532:0252  |
 | Razer Blade 15 Advanced (2020)                |  1532:0253  |
 | Razer Blade 15 (Early 2020) Base              |  1532:0255  |
+| Razer Cynosa V2                               |  1532:025E  |
 
 ### Mice
 | Device                                        | USB VID:PID |
@@ -133,6 +134,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Kraken 7.1                              |  1532:0506  |
 | Razer Kraken 7.1 V2                           |  1532:0510  |
 | Razer Kraken Ultimate                         |  1532:0527  |
+| Razer Kraken Kitty Edition                    |  1532:0F19  |
 
 ### Misc
 | Device                                        | USB VID:PID |
