@@ -2094,11 +2094,26 @@ class RazerAtherisReceiver(__RazerDevice):
         self.logger.debug("Device doesn't have suspend/resume")
 
 
-class RazerAtherisBluetooth(__RazerDevice):
+class RazerAtherisBluetooth(RazerAtherisReceiver):
     """
     Class for the Razer Atheris (Bluetooth)
     """
     USB_PID = 0x0061
+    EVENT_FILE_REGEX = re.compile(r'.*Razer_Atheris_Mouse-if0(1|2)-event-kbd')
+    
+    def __init__(self, *args, **kwargs):
+        super(RazerAtherisBluetooth, self).__init__(*args, **kwargs)
+
+        self._battery_manager = _BatteryManager(self, self._device_number, 'Razer Atheris (Bluetooth)')
+        self._battery_manager.active = self.config.getboolean('Startup', 'mouse_battery_notifier', fallback=False)
+
+    def _close(self):
+        """
+        Close the key manager
+        """
+        super(RazerAtherisBluetooth, self)._close()
+
+        self._battery_manager.close()
 
 
 class RazerBasiliskXHyperSpeed(__RazerDevice):
