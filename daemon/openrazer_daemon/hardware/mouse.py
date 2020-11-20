@@ -2063,9 +2063,11 @@ class RazerAtherisReceiver(__RazerDevice):
     USB_VID = 0x1532
     USB_PID = 0x0062
     EVENT_FILE_REGEX = re.compile(r'.*Razer_Razer_Atheris_-_Mobile_Gaming_Mouse-if0(1|2)-event-kbd')
-    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate',
-               # Battery
-               'get_battery', 'is_charging', 'set_idle_time', 'set_low_battery_threshold']
+    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy',
+               'get_dpi_stages', 'set_dpi_stages', 'get_poll_rate',
+               'set_poll_rate', 'get_battery', 'is_charging', 'get_idle_time',
+               'set_idle_time', 'get_low_battery_threshold',
+               'set_low_battery_threshold']
 
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1234/1234_atheris.png"
 
@@ -2090,6 +2092,13 @@ class RazerAtherisReceiver(__RazerDevice):
 
     def _suspend_device(self):
         self.logger.debug("Device doesn't have suspend/resume")
+
+
+class RazerAtherisBluetooth(__RazerDevice):
+    """
+    Class for the Razer Atheris (Bluetooth)
+    """
+    USB_PID = 0x0061
 
 
 class RazerBasiliskXHyperSpeed(__RazerDevice):

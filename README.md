@@ -103,6 +103,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer DeathAdder Elite                        |  1532:005C  |
 | Razer Abyssus 2000                            |  1532:005E  |
 | Razer Lancehead Tournament Edition            |  1532:0060  |
+| Razer Atheris (Bluetooth)                     |  1532:0061  |
 | Razer Atheris (Receiver)                      |  1532:0062  |
 | Razer Basilisk                                |  1532:0064  |
 | Razer Naga Trinity                            |  1532:0067  |
