@@ -1,5 +1,5 @@
 ACTION!="add", GOTO="razer_end"
-SUBSYSTEMS=="usb|input|hid|misc", ATTRS{idVendor}=="1532", GOTO="razer_vendor"
+SUBSYSTEMS=="usb|input|hid|uhid|misc", ATTRS{idVendor}=="1532", GOTO="razer_vendor"
 GOTO="razer_end"
 
 LABEL="razer_vendor"
@@ -28,12 +28,12 @@ ATTRS{idProduct}=="0068|0215|0517|0518|0c00|0c01|0c02|0f07|0f08|0f09|0f19", \
 ENV{ID_RAZER_CHROMA}!="1", GOTO="razer_end"
 
 # Set permissions if this is an input node
-SUBSYSTEM=="usb|input|hid|misc", GROUP:="plugdev"
+SUBSYSTEM=="usb|input|hid|uhid|misc", GROUP:="plugdev"
 
 # We're done unless it's the hid node
-SUBSYSTEM!="hid|usb|misc", GOTO="razer_end"
+SUBSYSTEM!="hid|uhid|usb|misc", GOTO="razer_end"
 
 # Rebind if needed
-SUBSYSTEM=="hid|usb|misc", RUN+="razer_mount $env{RAZER_DRIVER} $kernel"
+SUBSYSTEM=="hid|uhid|usb|misc", RUN+="razer_mount $env{RAZER_DRIVER} $kernel"
 
 LABEL="razer_end"

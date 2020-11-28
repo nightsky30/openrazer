@@ -2099,7 +2099,7 @@ class RazerAtherisBluetooth(RazerAtherisReceiver):
     Class for the Razer Atheris (Bluetooth)
     """
     USB_PID = 0x0061
-    EVENT_FILE_REGEX = re.compile(r'.*Razer_Atheris_Mouse-if0(1|2)-event-kbd')
+    # EVENT_FILE_REGEX = re.compile(r'.*Razer_Atheris_Mouse-if0(1|2)-event-kbd')
     
     def __init__(self, *args, **kwargs):
         super(RazerAtherisBluetooth, self).__init__(*args, **kwargs)
