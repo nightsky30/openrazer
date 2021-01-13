@@ -88,10 +88,10 @@ class RazerChargingPadChroma(_RazerDeviceBrightnessSuspend):
     """
     Class for the Razer Charging Pad Chroma
     """
-    EVENT_FILE_REGEX = re.compile(r'.*Razer_Charging_Pad_Chroma-if01-event-kbd')
+    EVENT_FILE_REGEX = re.compile(r'.*RAZER_Razer_Charging_Pad_Chroma-event-if01')
 
     USB_VID = 0x1532
-    USB_PID = 0x
+    USB_PID = 0x0f26
     HAS_MATRIX = True
     MATRIX_DIMS = [1, 10]
     METHODS = ['get_device_type_accessory', 'set_static_effect', 'set_wave_effect', 'set_spectrum_effect',
