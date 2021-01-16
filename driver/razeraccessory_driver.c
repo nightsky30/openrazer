@@ -1207,14 +1207,9 @@ static int razer_accessory_probe(struct hid_device *hdev, const struct hid_devic
         }
 
         switch(usb_dev->descriptor.idProduct) {
-        case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
-            // Needs to be in "Normal" mode for idle effects to function properly
-            razer_set_device_mode(dev->usb_dev, 0x00, 0x00);
-            break;
-        }
-
-        switch(usb_dev->descriptor.idProduct) {
         case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
+        // Needs to be in "Normal" mode for idle effects to function properly
+        case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
             break;
 
         default:
