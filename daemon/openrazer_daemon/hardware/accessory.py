@@ -110,7 +110,6 @@ class RazerChargingPadChroma(_RazerDeviceBrightnessSuspend):
     USB_VID = 0x1532
     USB_PID = 0x0f26
     HAS_MATRIX = True
-    # 1 - Left, 2 - Right
     WAVE_DIRS = (1, 2)
     MATRIX_DIMS = [1, 10]
     METHODS = ['get_device_type_accessory', 'set_static_effect', 'set_wave_effect', 'set_spectrum_effect',
