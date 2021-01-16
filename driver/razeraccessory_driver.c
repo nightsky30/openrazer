@@ -226,22 +226,10 @@ static ssize_t razer_attr_write_mode_spectrum(struct device *dev, struct device_
         break;
 
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
         report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
         break;
-
-    case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
-        // Some sort of mode switcher required after initialization and before color switching
-        report = get_razer_report(0x0f, 0x02, 0x06);
-        report.arguments[0] = 0x00;
-        report.arguments[1] = 0x00;
-        report.arguments[2] = 0x08;
-        report.arguments[3] = 0x00;
-        report.arguments[4] = 0x00;
-        report.arguments[5] = 0x00;
-        report.transaction_id.id = 0x1F;
-
-        razer_send_payload(device->usb_dev, &report);
 
         report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
@@ -358,24 +346,10 @@ static ssize_t razer_attr_write_mode_none(struct device *dev, struct device_attr
 
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
         report = razer_chroma_extended_matrix_effect_none(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
         break;
-
-    case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
-        // Some sort of mode switcher required after initialization and before color switching
-        report = get_razer_report(0x0f, 0x02, 0x06);
-        report.arguments[0] = 0x00;
-        report.arguments[1] = 0x00;
-        report.arguments[2] = 0x08;
-        report.arguments[3] = 0x00;
-        report.arguments[4] = 0x00;
-        report.arguments[5] = 0x00;
-        report.transaction_id.id = 0x1F;
-
-        mutex_lock(&device->lock);
-        razer_send_payload(device->usb_dev, &report);
-        mutex_unlock(&device->lock);
 
         report = razer_chroma_extended_matrix_effect_none(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
@@ -500,25 +474,7 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
 
         case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
-            report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
-            report.transaction_id.id = 0x1F;
-            break;
-
         case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
-            // Some sort of mode switcher required after initialization and before color switching
-            report = get_razer_report(0x0f, 0x02, 0x06);
-            report.arguments[0] = 0x00;
-            report.arguments[1] = 0x00;
-            report.arguments[2] = 0x08;
-            report.arguments[3] = 0x00;
-            report.arguments[4] = 0x00;
-            report.arguments[5] = 0x00;
-            report.transaction_id.id = 0x1F;
-
-            mutex_lock(&device->lock);
-            razer_send_payload(device->usb_dev, &report);
-            mutex_unlock(&device->lock);
-
             report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
             report.transaction_id.id = 0x1F;
             break;
@@ -569,25 +525,7 @@ static ssize_t razer_attr_write_mode_wave(struct device *dev, struct device_attr
         break;
 
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
-        report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
-        report.transaction_id.id = 0x1F;
-        break;
-
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
-        // Some sort of mode switcher required after initialization and before color switching
-        report = get_razer_report(0x0f, 0x02, 0x06);
-        report.arguments[0] = 0x00;
-        report.arguments[1] = 0x00;
-        report.arguments[2] = 0x08;
-        report.arguments[3] = 0x00;
-        report.arguments[4] = 0x00;
-        report.arguments[5] = 0x00;
-        report.transaction_id.id = 0x1F;
-
-        mutex_lock(&device->lock);
-        razer_send_payload(device->usb_dev, &report);
-        mutex_unlock(&device->lock);
-
         report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
         report.transaction_id.id = 0x1F;
         break;
@@ -642,39 +580,7 @@ static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_at
 
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
-        switch(count) {
-        case 3: // Single colour mode
-            report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0]);
-            report.transaction_id.id = 0x1F;
-            break;
-
-        case 6: // Dual colour mode
-            report = razer_chroma_extended_matrix_effect_breathing_dual(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0], (struct razer_rgb *)&buf[3]);
-            report.transaction_id.id = 0x1F;
-            break;
-
-        default: // "Random" colour mode
-            report = razer_chroma_extended_matrix_effect_breathing_random(VARSTORE, ZERO_LED);
-            report.transaction_id.id = 0x1F;
-            break;
-        }
-        break;
-
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
-        // Some sort of mode switcher required after initialization and before color switching
-        report = get_razer_report(0x0f, 0x02, 0x06);
-        report.arguments[0] = 0x00;
-        report.arguments[1] = 0x00;
-        report.arguments[2] = 0x08;
-        report.arguments[3] = 0x00;
-        report.arguments[4] = 0x00;
-        report.arguments[5] = 0x00;
-        report.transaction_id.id = 0x1F;
-
-        mutex_lock(&device->lock);
-        razer_send_payload(device->usb_dev, &report);
-        mutex_unlock(&device->lock);
-
         switch(count) {
         case 3: // Single colour mode
             report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0]);
@@ -1297,6 +1203,13 @@ static int razer_accessory_probe(struct hid_device *hdev, const struct hid_devic
         case USB_DEVICE_ID_RAZER_CHROMA_MUG:
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_is_mug_present);                    // Is cup present
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_effect_blinking);            // Blinking effect
+            break;
+        }
+
+        switch(usb_dev->descriptor.idProduct) {
+        case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+            // Needs to be in "Normal" mode for idle effects to function properly
+            razer_set_device_mode(dev->usb_dev, 0x00, 0x00);
             break;
         }
 
