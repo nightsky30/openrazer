@@ -226,7 +226,23 @@ static ssize_t razer_attr_write_mode_spectrum(struct device *dev, struct device_
         break;
 
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, ZERO_LED);
+        report.transaction_id.id = 0x1F;
+        break;
+
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+        // Some sort of mode switcher required after initialization and before color switching
+        report = get_razer_report(0x0f, 0x02, 0x06);
+        report.arguments[0] = 0x00;
+        report.arguments[1] = 0x00;
+        report.arguments[2] = 0x08;
+        report.arguments[3] = 0x00;
+        report.arguments[4] = 0x00;
+        report.arguments[5] = 0x00;
+        report.transaction_id.id = 0x1F;
+
+        razer_send_payload(usb_dev, &report);
+
         report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
         break;
@@ -342,7 +358,23 @@ static ssize_t razer_attr_write_mode_none(struct device *dev, struct device_attr
 
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        report = razer_chroma_extended_matrix_effect_none(VARSTORE, ZERO_LED);
+        report.transaction_id.id = 0x1F;
+        break;
+
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+        // Some sort of mode switcher required after initialization and before color switching
+        report = get_razer_report(0x0f, 0x02, 0x06);
+        report.arguments[0] = 0x00;
+        report.arguments[1] = 0x00;
+        report.arguments[2] = 0x08;
+        report.arguments[3] = 0x00;
+        report.arguments[4] = 0x00;
+        report.arguments[5] = 0x00;
+        report.transaction_id.id = 0x1F;
+
+        razer_send_payload(usb_dev, &report);
+
         report = razer_chroma_extended_matrix_effect_none(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
         break;
@@ -466,7 +498,23 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
 
         case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+            report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
+            report.transaction_id.id = 0x1F;
+            break;
+
         case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+            // Some sort of mode switcher required after initialization and before color switching
+            report = get_razer_report(0x0f, 0x02, 0x06);
+            report.arguments[0] = 0x00;
+            report.arguments[1] = 0x00;
+            report.arguments[2] = 0x08;
+            report.arguments[3] = 0x00;
+            report.arguments[4] = 0x00;
+            report.arguments[5] = 0x00;
+            report.transaction_id.id = 0x1F;
+
+            razer_send_payload(usb_dev, &report);
+
             report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
             report.transaction_id.id = 0x1F;
             break;
@@ -517,7 +565,23 @@ static ssize_t razer_attr_write_mode_wave(struct device *dev, struct device_attr
         break;
 
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
+        report.transaction_id.id = 0x1F;
+        break;
+
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+        // Some sort of mode switcher required after initialization and before color switching
+        report = get_razer_report(0x0f, 0x02, 0x06);
+        report.arguments[0] = 0x00;
+        report.arguments[1] = 0x00;
+        report.arguments[2] = 0x08;
+        report.arguments[3] = 0x00;
+        report.arguments[4] = 0x00;
+        report.arguments[5] = 0x00;
+        report.transaction_id.id = 0x1F;
+
+        razer_send_payload(usb_dev, &report);
+
         report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
         report.transaction_id.id = 0x1F;
         break;
@@ -572,7 +636,37 @@ static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_at
 
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        switch(count) {
+        case 3: // Single colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0]);
+            report.transaction_id.id = 0x1F;
+            break;
+
+        case 6: // Dual colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_dual(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0], (struct razer_rgb *)&buf[3]);
+            report.transaction_id.id = 0x1F;
+            break;
+
+        default: // "Random" colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_random(VARSTORE, ZERO_LED);
+            report.transaction_id.id = 0x1F;
+            break;
+        }
+        break;
+
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+        // Some sort of mode switcher required after initialization and before color switching
+        report = get_razer_report(0x0f, 0x02, 0x06);
+        report.arguments[0] = 0x00;
+        report.arguments[1] = 0x00;
+        report.arguments[2] = 0x08;
+        report.arguments[3] = 0x00;
+        report.arguments[4] = 0x00;
+        report.arguments[5] = 0x00;
+        report.transaction_id.id = 0x1F;
+
+        razer_send_payload(usb_dev, &report);
+
         switch(count) {
         case 3: // Single colour mode
             report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0]);
@@ -1069,7 +1163,6 @@ static bool razer_accessory_match(struct hid_device *hdev, bool ignore_special_d
     switch (usb_dev->descriptor.idProduct) {
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
-    case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
         if (intf->cur_altsetting->desc.bInterfaceNumber != 0) {
             dev_info(&intf->dev, "skipping secondary interface\n");
             return false;
