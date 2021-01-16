@@ -231,10 +231,6 @@ static ssize_t razer_attr_write_mode_spectrum(struct device *dev, struct device_
         report.transaction_id.id = 0x1F;
         break;
 
-        report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, ZERO_LED);
-        report.transaction_id.id = 0x1F;
-        break;
-
     default:
         printk(KERN_WARNING "razeraccessory: Unknown device\n");
         break;
@@ -474,8 +470,30 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
 
         case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
-        case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
             report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
+            report.transaction_id.id = 0x1F;
+            break;
+
+        case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+            // Mode switcher required after initialization and before color switching
+            // Same as Naga Trinity
+            report = get_razer_report(0x0f, 0x02, 0x06);
+            report.arguments[0] = 0x00;
+            report.arguments[1] = 0x00;
+            report.arguments[2] = 0x08;
+            report.arguments[3] = 0x00;
+            report.arguments[4] = 0x00;
+            report.arguments[5] = 0x00;
+            report.transaction_id.id = 0x1F;
+
+            mutex_lock(&device->lock);
+            razer_send_payload(device->usb_dev, &report);
+            mutex_unlock(&device->lock);
+
+            report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
+            report.arguments[3] = 0x02;
+            report.arguments[4] = 0x01;
+            report.arguments[5] = 0x01;
             report.transaction_id.id = 0x1F;
             break;
 
@@ -525,8 +543,13 @@ static ssize_t razer_attr_write_mode_wave(struct device *dev, struct device_attr
         break;
 
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
+        report.transaction_id.id = 0x1F;
+        break;
+
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
         report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
+        report.arguments[4] = 0x21;
         report.transaction_id.id = 0x1F;
         break;
 
