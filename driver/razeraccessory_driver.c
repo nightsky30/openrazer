@@ -557,8 +557,9 @@ static ssize_t razer_attr_write_mode_wave(struct device *dev, struct device_attr
         break;
 
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+        // Direction values are flipped compared to other devices
+        direction ^= ((1<<0) | (1<<1));
         report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
-        report.arguments[4] = 0x21;
         report.transaction_id.id = 0x1F;
         break;
 
