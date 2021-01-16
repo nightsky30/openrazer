@@ -475,8 +475,20 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
             break;
 
         case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
-            // Mode switcher required after initialization and before color switching
-            // Same as Naga Trinity
+            /**
+             * Mode switcher required after setting static color effect once and before setting a second time.
+             * Similar as Naga Trinity?
+             * 
+             * If the color is not set twice with the mode switch inbetween, each subsequent 
+             * setting of the static effect actually sets the previous color...
+             */
+            report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
+            report.transaction_id.id = 0x1F;
+            
+            mutex_lock(&device->lock);
+            razer_send_payload(device->usb_dev, &report);
+            mutex_unlock(&device->lock);
+            
             report = get_razer_report(0x0f, 0x02, 0x06);
             report.arguments[0] = 0x00;
             report.arguments[1] = 0x00;
@@ -491,9 +503,6 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
             mutex_unlock(&device->lock);
 
             report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
-            report.arguments[3] = 0x02;
-            report.arguments[4] = 0x01;
-            report.arguments[5] = 0x01;
             report.transaction_id.id = 0x1F;
             break;
 
