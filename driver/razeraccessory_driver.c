@@ -373,7 +373,9 @@ static ssize_t razer_attr_write_mode_none(struct device *dev, struct device_attr
         report.arguments[5] = 0x00;
         report.transaction_id.id = 0x1F;
 
+        mutex_lock(&device->lock);
         razer_send_payload(device->usb_dev, &report);
+        mutex_unlock(&device->lock);
 
         report = razer_chroma_extended_matrix_effect_none(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
@@ -513,7 +515,9 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
             report.arguments[5] = 0x00;
             report.transaction_id.id = 0x1F;
 
+            mutex_lock(&device->lock);
             razer_send_payload(device->usb_dev, &report);
+            mutex_unlock(&device->lock);
 
             report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
             report.transaction_id.id = 0x1F;
@@ -580,7 +584,9 @@ static ssize_t razer_attr_write_mode_wave(struct device *dev, struct device_attr
         report.arguments[5] = 0x00;
         report.transaction_id.id = 0x1F;
 
+        mutex_lock(&device->lock);
         razer_send_payload(device->usb_dev, &report);
+        mutex_unlock(&device->lock);
 
         report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
         report.transaction_id.id = 0x1F;
@@ -665,7 +671,9 @@ static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_at
         report.arguments[5] = 0x00;
         report.transaction_id.id = 0x1F;
 
+        mutex_lock(&device->lock);
         razer_send_payload(device->usb_dev, &report);
+        mutex_unlock(&device->lock);
 
         switch(count) {
         case 3: // Single colour mode
