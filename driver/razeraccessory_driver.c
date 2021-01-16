@@ -1163,6 +1163,7 @@ static bool razer_accessory_match(struct hid_device *hdev, bool ignore_special_d
     switch (usb_dev->descriptor.idProduct) {
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
         if (intf->cur_altsetting->desc.bInterfaceNumber != 0) {
             dev_info(&intf->dev, "skipping secondary interface\n");
             return false;
