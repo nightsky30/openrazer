@@ -114,7 +114,7 @@ class RazerBaseStationV2Chroma(_RazerDeviceBrightnessSuspend):
     METHODS = ['get_device_type_accessory', 'set_static_effect', 'set_wave_effect', 'set_spectrum_effect',
                'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect',
                'set_custom_effect', 'set_key_row']
-    
+
     DEVICE_IMAGE = "https://dl.razerzone.com/src/3897-1-EN-v2.png"
 
 
@@ -134,4 +134,3 @@ class RazerChargingPadChroma(_RazerDeviceBrightnessSuspend):
                'set_custom_effect', 'set_key_row']
 
     DEVICE_IMAGE = "https://dl.razerzone.com/Images/ChargingPadChroma/CPC-ProductImage.png"
-
