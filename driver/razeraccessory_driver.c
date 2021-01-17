@@ -477,7 +477,7 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
         case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
             /**
              * Mode switcher required after setting static color effect once and before setting a second time.
-             * Similar as Naga Trinity?
+             * Similar to Naga Trinity?
              *
              * If the color is not set twice with the mode switch inbetween, each subsequent
              * setting of the static effect actually sets the previous color...
