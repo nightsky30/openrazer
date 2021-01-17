@@ -599,7 +599,7 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
             * If the color is not set twice with the mode switch inbetween, each subsequent
             * setting of the static effect actually sets the previous color...
             */
-            report = razer_naga_trinity_effect_static((struct razer_rgb*)&buf[0]);
+            report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*)&buf[0]);
 
             razer_send_payload(usb_dev, &report);
 
@@ -615,7 +615,7 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
 
             razer_send_payload(usb_dev, &report);
 
-            report = razer_naga_trinity_effect_static((struct razer_rgb*)&buf[0]);
+            report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*)&buf[0]);
             break;
 
         default:
