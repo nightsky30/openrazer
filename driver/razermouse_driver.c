@@ -593,6 +593,16 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
             break;
 
         case USB_DEVICE_ID_RAZER_NAGA_TRINITY:
+            /**
+            * Mode switcher required after setting static color effect once and before setting a second time.
+            *
+            * If the color is not set twice with the mode switch inbetween, each subsequent
+            * setting of the static effect actually sets the previous color...
+            */
+            report = razer_naga_trinity_effect_static((struct razer_rgb*)&buf[0]);
+
+            razer_send_payload(usb_dev, &report);
+
             // Some sort of mode switcher required after initialization and before color switching
             report = get_razer_report(0x0f, 0x02, 0x06);
             report.arguments[0] = 0x00;
