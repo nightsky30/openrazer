@@ -108,7 +108,7 @@ class RazerChargingPadChroma(_RazerDeviceBrightnessSuspend):
     EVENT_FILE_REGEX = re.compile(r'.*RAZER_Razer_Charging_Pad_Chroma-event-if01')
 
     USB_VID = 0x1532
-    USB_PID = 0x0f26
+    USB_PID = 0x0F26
     HAS_MATRIX = True
     WAVE_DIRS = (1, 2)
     MATRIX_DIMS = [1, 10]
