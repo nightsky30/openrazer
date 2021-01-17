@@ -148,6 +148,10 @@ static ssize_t razer_attr_read_device_type(struct device *dev, struct device_att
         device_type = "Razer Base Station Chroma\n";
         break;
 
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
+        device_type = "Razer Base Station V2 Chroma\n";
+        break;
+
     case USB_DEVICE_ID_RAZER_NOMMO_PRO:
         device_type = "Razer Nommo Pro\n";
         break;
@@ -222,6 +226,7 @@ static ssize_t razer_attr_write_mode_spectrum(struct device *dev, struct device_
         break;
 
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
         break;
@@ -337,6 +342,7 @@ static ssize_t razer_attr_write_mode_none(struct device *dev, struct device_attr
 
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         report = razer_chroma_extended_matrix_effect_none(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
         break;
@@ -411,6 +417,7 @@ static ssize_t razer_attr_write_mode_custom(struct device *dev, struct device_at
 
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         report = razer_chroma_extended_matrix_effect_custom_frame();
         report.transaction_id.id = 0x1F;
         break;
@@ -459,6 +466,7 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
 
         case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
             report = razer_chroma_extended_matrix_effect_static(VARSTORE, ZERO_LED, (struct razer_rgb*) & buf[0]);
             report.transaction_id.id = 0x1F;
             break;
@@ -509,6 +517,7 @@ static ssize_t razer_attr_write_mode_wave(struct device *dev, struct device_attr
         break;
 
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
         report.transaction_id.id = 0x1F;
         break;
@@ -563,6 +572,7 @@ static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_at
 
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         switch(count) {
         case 3: // Single colour mode
             report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0]);
@@ -683,6 +693,7 @@ static ssize_t razer_attr_write_set_key_row(struct device *dev, struct device_at
 
         case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
             report = razer_chroma_extended_matrix_set_custom_frame2(row_id, start_col, stop_col, (unsigned char*)&buf[offset], 0);
             report.transaction_id.id = 0x1F;
             break;
@@ -737,6 +748,7 @@ static ssize_t razer_attr_read_get_serial(struct device *dev, struct device_attr
 
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         report.transaction_id.id = 0x1F;
         response_report = razer_send_payload(device->usb_dev, &report);
         strncpy(&serial_string[0], &response_report.arguments[0], 22);
@@ -765,6 +777,7 @@ static ssize_t razer_attr_read_get_firmware_version(struct device *dev, struct d
     switch(device->usb_pid) {
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         report.transaction_id.id = 0x1F;
         break;
 
@@ -807,6 +820,7 @@ static ssize_t razer_attr_write_device_mode(struct device *dev, struct device_at
         switch(device->usb_pid) {
         case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
             report.transaction_id.id = 0x1F;
             break;
         }
@@ -846,6 +860,7 @@ static ssize_t razer_attr_read_device_mode(struct device *dev, struct device_att
     switch(device->usb_pid) {
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         report.transaction_id.id = 0x1F;
         break;
     }
@@ -884,6 +899,7 @@ static ssize_t razer_attr_write_set_brightness(struct device *dev, struct device
 
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         report = razer_chroma_extended_matrix_brightness(VARSTORE, ZERO_LED, brightness);
         report.transaction_id.id = 0x1F;
         device->saved_brightness = brightness;
@@ -932,6 +948,7 @@ static ssize_t razer_attr_read_set_brightness(struct device *dev, struct device_
     case USB_DEVICE_ID_RAZER_GOLIATHUS_CHROMA_EXTENDED:
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         brightness = device->saved_brightness;
         break;
 
@@ -1042,6 +1059,27 @@ static int razer_input_mapping(struct hid_device *hdev, struct hid_input *hi, st
 }
 
 /**
+ * Match method checks whether this driver should be used for a given HID device
+ */
+static bool razer_accessory_match(struct hid_device *hdev, bool ignore_special_driver)
+{
+    struct usb_interface *intf = to_usb_interface(hdev->dev.parent);
+    struct usb_device *usb_dev = interface_to_usbdev(intf);
+
+    switch (usb_dev->descriptor.idProduct) {
+    case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
+    case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
+        if (intf->cur_altsetting->desc.bInterfaceNumber != 0) {
+            dev_info(&intf->dev, "skipping secondary interface\n");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * Probe method is ran whenever a device is binded to the driver
  */
 static int razer_accessory_probe(struct hid_device *hdev, const struct hid_device_id *id)
@@ -1068,6 +1106,7 @@ static int razer_accessory_probe(struct hid_device *hdev, const struct hid_devic
     case USB_DEVICE_ID_RAZER_CORE:
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         expected_protocol = 0;
         break;
 
@@ -1123,6 +1162,7 @@ static int razer_accessory_probe(struct hid_device *hdev, const struct hid_devic
         case USB_DEVICE_ID_RAZER_CHROMA_BASE:
         case USB_DEVICE_ID_RAZER_CHROMA_HDK:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_effect_spectrum);            // Spectrum effect
         }
 
@@ -1135,6 +1175,7 @@ static int razer_accessory_probe(struct hid_device *hdev, const struct hid_devic
         case USB_DEVICE_ID_RAZER_NOMMO_PRO:
         case USB_DEVICE_ID_RAZER_NOMMO_CHROMA:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_effect_wave);                // Wave effect
             break;
         }
@@ -1209,6 +1250,7 @@ static void razer_accessory_disconnect(struct hid_device *hdev)
     case USB_DEVICE_ID_RAZER_CORE:
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+    case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
         expected_protocol = 0;
         break;
 
@@ -1255,6 +1297,7 @@ static void razer_accessory_disconnect(struct hid_device *hdev)
         case USB_DEVICE_ID_RAZER_CHROMA_BASE:
         case USB_DEVICE_ID_RAZER_CHROMA_HDK:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
             device_remove_file(&hdev->dev, &dev_attr_matrix_effect_spectrum);            // Spectrum effect
         }
 
@@ -1267,6 +1310,7 @@ static void razer_accessory_disconnect(struct hid_device *hdev)
         case USB_DEVICE_ID_RAZER_NOMMO_PRO:
         case USB_DEVICE_ID_RAZER_NOMMO_CHROMA:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
+        case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
             device_remove_file(&hdev->dev, &dev_attr_matrix_effect_wave);                // Wave effect
             break;
         }
@@ -1337,6 +1381,7 @@ static const struct hid_device_id razer_devices[] = {
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_NOMMO_CHROMA) },
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION) },
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA) },
+    { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA) },
     { 0 }
 };
 
@@ -1348,6 +1393,7 @@ MODULE_DEVICE_TABLE(hid, razer_devices);
 static struct hid_driver razer_accessory_driver = {
     .name = "razeraccessory",
     .id_table = razer_devices,
+    .match = razer_accessory_match,
     .probe = razer_accessory_probe,
     .remove = razer_accessory_disconnect,
     .raw_event = razer_raw_event,
