@@ -138,7 +138,7 @@ class RazerDevice(object):
             'lighting_profile_led_red': self._has_feature('razer.device.lighting.profile_led', 'setRedLED'),
             'lighting_profile_led_green': self._has_feature('razer.device.lighting.profile_led', 'setGreenLED'),
             'lighting_profile_led_blue': self._has_feature('razer.device.lighting.profile_led', 'setBlueLED'),
-            
+
             # Charging Pad attrs
             'lighting_charging': self._has_feature('razer.device.lighting.charging'),
             'lighting_charging_active': self._has_feature('razer.device.lighting.charging', 'setChargingActive'),
@@ -150,7 +150,7 @@ class RazerDevice(object):
             'lighting_charging_breath_single': self._has_feature('razer.device.lighting.charging', 'setChargingBreathSingle'),
             'lighting_charging_breath_dual': self._has_feature('razer.device.lighting.charging', 'setChargingBreathDual'),
             'lighting_charging_breath_random': self._has_feature('razer.device.lighting.charging', 'setChargingBreathRandom'),
-            
+
             'lighting_fast_charging': self._has_feature('razer.device.lighting.fast_charging'),
             'lighting_fast_charging_active': self._has_feature('razer.device.lighting.fast_charging', 'setFastChargingActive'),
             'lighting_fast_charging_brightness': self._has_feature('razer.device.lighting.fast_charging', 'setFastChargingBrightness'),

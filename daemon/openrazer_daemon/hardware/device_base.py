@@ -175,7 +175,7 @@ class RazerDevice(DBusService):
                 ('razer.device.lighting.right', 'getRightEffectSpeed', self.get_current_right_effect_speed, None, 'i'),
                 ('razer.device.lighting.right', 'getRightWaveDir', self.get_current_right_wave_dir, None, 'i'),
             },
-            
+
             "charging": {
                 ('razer.device.lighting.charging', 'getChargingEffect', self.get_current_charging_effect, None, 's'),
                 ('razer.device.lighting.charging', 'getChargingEffectColors', self.get_current_charging_effect_colors, None, 'ay'),
