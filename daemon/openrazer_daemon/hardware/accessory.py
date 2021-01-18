@@ -129,8 +129,12 @@ class RazerChargingPadChroma(_RazerDeviceBrightnessSuspend):
     HAS_MATRIX = True
     WAVE_DIRS = (1, 2)
     MATRIX_DIMS = [1, 10]
-    METHODS = ['get_device_type_accessory', 'set_static_effect', 'set_wave_effect', 'set_spectrum_effect',
-               'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect',
-               'set_custom_effect', 'set_key_row']
+    METHODS = ['get_device_type_accessory', 'set_custom_effect', 'set_key_row', 'get_charging_brightness', 'set_charging_brightness', 'get_fast_charging_brightness', 'set_fast_charging_brightness',
+               # Idle
+               'set_wave_effect', 'set_static_effect', 'set_spectrum_effect', 'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect',
+               # Charging
+               'set_charging_wave', 'set_charging_static', 'set_charging_spectrum', 'set_charging_none', 'set_charging_breath_random', 'set_charging_breath_single', 'set_charging_breath_dual',
+               # Fast Charging
+               'set_fast_charging_wave', 'set_fast_charging_static', 'set_fast_charging_spectrum', 'set_fast_charging_none', 'set_fast_charging_breath_random', 'set_fast_charging_breath_single', 'set_fast_charging_breath_dual']
 
     DEVICE_IMAGE = "https://dl.razerzone.com/Images/ChargingPadChroma/CPC-ProductImage.png"

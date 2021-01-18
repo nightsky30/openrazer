@@ -38,7 +38,7 @@ class RazerDevice(DBusService):
 
     WAVE_DIRS = (1, 2)
 
-    ZONES = ('backlight', 'logo', 'scroll', 'left', 'right')
+    ZONES = ('backlight', 'logo', 'scroll', 'left', 'right', 'charging', 'fast_charging')
 
     DEVICE_IMAGE = None
 
@@ -174,6 +174,20 @@ class RazerDevice(DBusService):
                 ('razer.device.lighting.right', 'getRightEffectColors', self.get_current_right_effect_colors, None, 'ay'),
                 ('razer.device.lighting.right', 'getRightEffectSpeed', self.get_current_right_effect_speed, None, 'i'),
                 ('razer.device.lighting.right', 'getRightWaveDir', self.get_current_right_wave_dir, None, 'i'),
+            },
+            
+            "charging": {
+                ('razer.device.lighting.charging', 'getChargingEffect', self.get_current_charging_effect, None, 's'),
+                ('razer.device.lighting.charging', 'getChargingEffectColors', self.get_current_charging_effect_colors, None, 'ay'),
+                ('razer.device.lighting.charging', 'getChargingEffectSpeed', self.get_current_charging_effect_speed, None, 'i'),
+                ('razer.device.lighting.charging', 'getChargingWaveDir', self.get_current_charging_wave_dir, None, 'i'),
+            },
+
+            "fast_charging": {
+                ('razer.device.lighting.fast_charging', 'getFastChargingEffect', self.get_current_fast_charging_effect, None, 's'),
+                ('razer.device.lighting.fast_charging', 'getFastChargingEffectColors', self.get_current_fast_charging_effect_colors, None, 'ay'),
+                ('razer.device.lighting.fast_charging', 'getFastChargingEffectSpeed', self.get_current_fast_charging_effect_speed, None, 'i'),
+                ('razer.device.lighting.fast_charging', 'getFastChargingWaveDir', self.get_current_fast_charging_wave_dir, None, 'i'),
             }
         }
 
@@ -631,6 +645,94 @@ class RazerDevice(DBusService):
         self.logger.debug("DBus call get_current_right_wave_dir")
 
         return self.zone["right"]["wave_dir"]
+
+    def get_current_charging_effect(self):
+        """
+        Get the device's current charging effect
+
+        :return: Effect
+        :rtype: string
+        """
+        self.logger.debug("DBus call get_current_charging_effect")
+
+        return self.zone["charging"]["effect"]
+
+    def get_current_charging_effect_colors(self):
+        """
+        Get the device's current charging effect's colors
+
+        :return: 3 colors
+        :rtype: list of byte
+        """
+        self.logger.debug("DBus call get_current_charging_effect_colors")
+
+        return self.zone["charging"]["colors"]
+
+    def get_current_charging_effect_speed(self):
+        """
+        Get the device's current charging effect's speed
+
+        :return: Speed
+        :rtype: int
+        """
+        self.logger.debug("DBus call get_current_charging_effect_speed")
+
+        return self.zone["charging"]["speed"]
+
+    def get_current_charging_wave_dir(self):
+        """
+        Get the device's current charging wave direction
+
+        :return: Direction
+        :rtype: int
+        """
+        self.logger.debug("DBus call get_current_charging_wave_dir")
+
+        return self.zone["charging"]["wave_dir"]
+
+    def get_current_fast_charging_effect(self):
+        """
+        Get the device's current fast_charging effect
+
+        :return: Effect
+        :rtype: string
+        """
+        self.logger.debug("DBus call get_current_fast_charging_effect")
+
+        return self.zone["fast_charging"]["effect"]
+
+    def get_current_fast_charging_effect_colors(self):
+        """
+        Get the device's current fast_charging effect's colors
+
+        :return: 3 colors
+        :rtype: list of byte
+        """
+        self.logger.debug("DBus call get_current_fast_charging_effect_colors")
+
+        return self.zone["fast_charging"]["colors"]
+
+    def get_current_fast_charging_effect_speed(self):
+        """
+        Get the device's current fast_charging effect's speed
+
+        :return: Speed
+        :rtype: int
+        """
+        self.logger.debug("DBus call get_current_fast_charging_effect_speed")
+
+        return self.zone["fast_charging"]["speed"]
+
+    def get_current_fast_charging_wave_dir(self):
+        """
+        Get the device's current fast_charging wave direction
+
+        :return: Direction
+        :rtype: int
+        """
+        self.logger.debug("DBus call get_current_fast_charging_wave_dir")
+
+        return self.zone["fast_charging"]["wave_dir"]
 
     @property
     def effect_sync(self):
