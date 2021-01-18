@@ -350,7 +350,7 @@ class RazerDevice(DBusService):
                 if i == "backlight":
                     effect_func_name = 'set' + self.capitalize_first_char(self.zone[i]["effect"])
                 else:
-                    effect_func_name = 'set' + self.capitalize_first_char(i) + self.capitalize_first_char(self.zone[i]["effect"])
+                    effect_func_name = 'set' + self.handle_underscores(self.capitalize_first_char(i)) + self.capitalize_first_char(self.zone[i]["effect"])
 
                 # find the effect method
                 effect_func = getattr(self, effect_func_name, None)
@@ -1055,6 +1055,10 @@ class RazerDevice(DBusService):
         """
         func_sig = inspect.signature(func)
         return len(func_sig.parameters)
+
+    @staticmethod
+    def handle_underscores(string):
+        return re.sub(r'[_]+(?P<first>[a-z])', lambda m: m.group('first').upper(), string)
 
     @staticmethod
     def capitalize_first_char(string):
