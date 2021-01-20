@@ -231,7 +231,13 @@ static ssize_t razer_attr_write_mode_spectrum(struct device *dev, struct device_
 
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
     case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
+        report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, ZERO_LED);
+        report.transaction_id.id = 0x1F;
+        break;
+
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+        // Must be in normal mode for hardware effects
+        razer_set_device_mode(device->usb_dev, 0x00, 0x00);
         report = razer_chroma_extended_matrix_effect_spectrum(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
         break;
@@ -348,7 +354,13 @@ static ssize_t razer_attr_write_mode_none(struct device *dev, struct device_attr
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
     case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
+        report = razer_chroma_extended_matrix_effect_none(VARSTORE, ZERO_LED);
+        report.transaction_id.id = 0x1F;
+        break;
+
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+        // Must be in normal mode for hardware effects
+        razer_set_device_mode(device->usb_dev, 0x00, 0x00);
         report = razer_chroma_extended_matrix_effect_none(VARSTORE, ZERO_LED);
         report.transaction_id.id = 0x1F;
         break;
@@ -479,6 +491,8 @@ static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_at
             break;
 
         case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+            // Must be in normal mode for hardware effects
+            razer_set_device_mode(device->usb_dev, 0x00, 0x00);
             /**
              * Mode switcher required after setting static color effect once and before setting a second time.
              * Similar to Naga Trinity?
@@ -562,6 +576,8 @@ static ssize_t razer_attr_write_mode_wave(struct device *dev, struct device_attr
         break;
 
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+        // Must be in normal mode for hardware effects
+        razer_set_device_mode(device->usb_dev, 0x00, 0x00);
         // Direction values are flipped compared to other devices
         direction ^= ((1<<0) | (1<<1));
         report = razer_chroma_extended_matrix_effect_wave(VARSTORE, ZERO_LED, direction);
@@ -619,7 +635,27 @@ static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_at
     case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
     case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
     case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
+        switch(count) {
+        case 3: // Single colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0]);
+            report.transaction_id.id = 0x1F;
+            break;
+
+        case 6: // Dual colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_dual(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0], (struct razer_rgb *)&buf[3]);
+            report.transaction_id.id = 0x1F;
+            break;
+
+        default: // "Random" colour mode
+            report = razer_chroma_extended_matrix_effect_breathing_random(VARSTORE, ZERO_LED);
+            report.transaction_id.id = 0x1F;
+            break;
+        }
+        break;
+
     case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+        // Must be in normal mode for hardware effects
+        razer_set_device_mode(device->usb_dev, 0x00, 0x00);
         switch(count) {
         case 3: // Single colour mode
             report = razer_chroma_extended_matrix_effect_breathing_single(VARSTORE, ZERO_LED, (struct razer_rgb *)&buf[0]);
@@ -741,7 +777,13 @@ static ssize_t razer_attr_write_set_key_row(struct device *dev, struct device_at
         case USB_DEVICE_ID_RAZER_KRAKEN_KITTY_EDITION:
         case USB_DEVICE_ID_RAZER_MOUSE_BUNGEE_V3_CHROMA:
         case USB_DEVICE_ID_RAZER_BASE_STATION_V2_CHROMA:
+            report = razer_chroma_extended_matrix_set_custom_frame2(row_id, start_col, stop_col, (unsigned char*)&buf[offset], 0);
+            report.transaction_id.id = 0x1F;
+            break;
+
         case USB_DEVICE_ID_RAZER_CHARGING_PAD_CHROMA:
+            // Must be in driver mode for custom effects
+            razer_set_device_mode(device->usb_dev, 0x03, 0x00);
             report = razer_chroma_extended_matrix_set_custom_frame2(row_id, start_col, stop_col, (unsigned char*)&buf[offset], 0);
             report.transaction_id.id = 0x1F;
             break;
@@ -758,7 +800,6 @@ static ssize_t razer_attr_write_set_key_row(struct device *dev, struct device_at
         // *3 as its 3 bytes per col (RGB)
         offset += row_length;
     }
-
 
     return count;
 }
