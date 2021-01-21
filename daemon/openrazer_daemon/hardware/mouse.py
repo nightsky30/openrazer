@@ -945,11 +945,19 @@ class RazerNagaTrinity(__RazerDeviceSpecialBrightnessSuspend):
 
     USB_VID = 0x1532
     USB_PID = 0x0067
-    HAS_MATRIX = False  # TODO Device supports matrix, driver missing
+    HAS_MATRIX = True
     DEDICATED_MACRO_KEYS = True
-    MATRIX_DIMS = [1, 3]
-    METHODS = ['get_device_type_mouse', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate',
-               'get_brightness', 'set_brightness', 'set_static_effect', 'max_dpi']
+    MATRIX_DIMS = [1, 3]               
+    METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate', 'get_logo_brightness', 'set_logo_brightness', 'get_scroll_brightness', 'set_scroll_brightness',
+               'get_left_brightness', 'set_left_brightness',
+               # Logo
+               'set_logo_static_naga_hex_v2', 'set_logo_spectrum_naga_hex_v2', 'set_logo_none_naga_hex_v2', 'set_logo_reactive_naga_hex_v2', 'set_logo_breath_random_naga_hex_v2', 'set_logo_breath_single_naga_hex_v2', 'set_logo_breath_dual_naga_hex_v2',
+               # Scroll wheel
+               'set_scroll_static_naga_hex_v2', 'set_scroll_spectrum_naga_hex_v2', 'set_scroll_none_naga_hex_v2', 'set_scroll_reactive_naga_hex_v2', 'set_scroll_breath_random_naga_hex_v2', 'set_scroll_breath_single_naga_hex_v2', 'set_scroll_breath_dual_naga_hex_v2',
+               # Left side
+               'set_left_static', 'set_left_spectrum', 'set_left_none', 'set_left_reactive', 'set_left_breath_random', 'set_left_breath_single', 'set_left_breath_dual',
+               # Can set with custom
+               'set_custom_effect', 'set_key_row']
 
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1251/1251_razer_naga_trinity.png"
 
@@ -967,6 +975,35 @@ class RazerNagaTrinity(__RazerDeviceSpecialBrightnessSuspend):
         super(RazerNagaTrinity, self)._close()
 
         # self.key_manager.close()
+        
+    def _suspend_device(self):
+        """
+        Suspend the device
+        Get the current brightness level, store it for later and then set the brightness to 0
+        """
+        self.suspend_args.clear()
+        self.suspend_args['brightness'] = (_da_get_logo_brightness(self), _da_get_scroll_brightness(self), _get_left_brightness(self))
+
+        # Todo make it context?
+        self.disable_notify = True
+        _da_set_logo_brightness(self, 0)
+        _da_set_scroll_brightness(self, 0)
+        _set_left_brightness(self, 0)
+        self.disable_notify = False
+
+    def _resume_device(self):
+        """
+        Resume the device
+        Get the last known brightness and then set the brightness
+        """
+        logo_brightness = self.suspend_args.get('brightness', (100, 100, 100))[0]
+        scroll_brightness = self.suspend_args.get('brightness', (100, 100, 100))[1]
+        left_row_brightness = self.suspend_args.get('brightness', (100, 100, 100))[2]
+        self.disable_notify = True
+        _da_set_logo_brightness(self, logo_brightness)
+        _da_set_scroll_brightness(self, scroll_brightness)
+        _set_left_brightness(self, left_row_brightness)
+        self.disable_notify = False
 
 
 class RazerNagaHex(__RazerDevice):
