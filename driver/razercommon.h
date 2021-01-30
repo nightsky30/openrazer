@@ -56,6 +56,7 @@ do { \
 #define LEFT_SIDE_LED     0x11
 #define CHARGING_LED      0x20
 #define FAST_CHARGING_LED 0x21
+#define FULLY_CHARGED_LED 0x22
 
 // LED Effect definitions
 #define LED_STATIC           0x00

@@ -38,7 +38,7 @@ class RazerDevice(DBusService):
 
     WAVE_DIRS = (1, 2)
 
-    ZONES = ('backlight', 'logo', 'scroll', 'left', 'right', 'charging', 'fast_charging')
+    ZONES = ('backlight', 'logo', 'scroll', 'left', 'right', 'charging', 'fast_charging', 'fully_charged')
 
     DEVICE_IMAGE = None
 
@@ -188,6 +188,13 @@ class RazerDevice(DBusService):
                 ('razer.device.lighting.fast_charging', 'getFastChargingEffectColors', self.get_current_fast_charging_effect_colors, None, 'ay'),
                 ('razer.device.lighting.fast_charging', 'getFastChargingEffectSpeed', self.get_current_fast_charging_effect_speed, None, 'i'),
                 ('razer.device.lighting.fast_charging', 'getFastChargingWaveDir', self.get_current_fast_charging_wave_dir, None, 'i'),
+            },
+
+            "fully_charged": {
+                ('razer.device.lighting.fully_charged', 'getFullyChargedEffect', self.get_current_fully_charged_effect, None, 's'),
+                ('razer.device.lighting.fully_charged', 'getFullyChargedEffectColors', self.get_current_fully_charged_effect_colors, None, 'ay'),
+                ('razer.device.lighting.fully_charged', 'getFullyChargedEffectSpeed', self.get_current_fully_charged_effect_speed, None, 'i'),
+                ('razer.device.lighting.fully_charged', 'getFullyChargedWaveDir', self.get_current_fully_charged_wave_dir, None, 'i'),
             }
         }
 
@@ -733,6 +740,50 @@ class RazerDevice(DBusService):
         self.logger.debug("DBus call get_current_fast_charging_wave_dir")
 
         return self.zone["fast_charging"]["wave_dir"]
+
+    def get_current_fully_charged_effect(self):
+        """
+        Get the device's current fully_charged effect
+
+        :return: Effect
+        :rtype: string
+        """
+        self.logger.debug("DBus call get_current_fully_charged_effect")
+
+        return self.zone["fully_charged"]["effect"]
+
+    def get_current_fully_charged_effect_colors(self):
+        """
+        Get the device's current fully_charged effect's colors
+
+        :return: 3 colors
+        :rtype: list of byte
+        """
+        self.logger.debug("DBus call get_current_fully_charged_effect_colors")
+
+        return self.zone["fully_charged"]["colors"]
+
+    def get_current_fully_charged_effect_speed(self):
+        """
+        Get the device's current fully_charged effect's speed
+
+        :return: Speed
+        :rtype: int
+        """
+        self.logger.debug("DBus call get_current_fully_charged_effect_speed")
+
+        return self.zone["fully_charged"]["speed"]
+
+    def get_current_fully_charged_wave_dir(self):
+        """
+        Get the device's current fully_charged wave direction
+
+        :return: Direction
+        :rtype: int
+        """
+        self.logger.debug("DBus call get_current_fully_charged_wave_dir")
+
+        return self.zone["fully_charged"]["wave_dir"]
 
     @property
     def effect_sync(self):
