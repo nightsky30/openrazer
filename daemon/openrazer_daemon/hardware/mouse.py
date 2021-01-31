@@ -999,6 +999,7 @@ class RazerNagaTrinity(__RazerDeviceSpecialBrightnessSuspend):
         # logo_brightness = self.suspend_args.get('brightness', (100, 100, 100))[0]
         # scroll_brightness = self.suspend_args.get('brightness', (100, 100, 100))[1]
         # left_row_brightness = self.suspend_args.get('brightness', (100, 100, 100))[2]
+
         # self.disable_notify = True
         # _da_set_logo_brightness(self, logo_brightness)
         # _da_set_scroll_brightness(self, scroll_brightness)
