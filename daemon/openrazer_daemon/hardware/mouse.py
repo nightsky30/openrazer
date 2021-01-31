@@ -976,34 +976,34 @@ class RazerNagaTrinity(__RazerDeviceSpecialBrightnessSuspend):
 
         # self.key_manager.close()
 
-    def _suspend_device(self):
-        """
-        Suspend the device
-        Get the current brightness level, store it for later and then set the brightness to 0
-        """
-        self.suspend_args.clear()
-        self.suspend_args['brightness'] = (_da_get_logo_brightness(self), _da_get_scroll_brightness(self), _get_left_brightness(self))
+    # def _suspend_device(self):
+        # """
+        # Suspend the device
+        # Get the current brightness level, store it for later and then set the brightness to 0
+        # """
+        # self.suspend_args.clear()
+        # self.suspend_args['brightness'] = (_da_get_logo_brightness(self), _da_get_scroll_brightness(self), _get_left_brightness(self))
 
-        # Todo make it context?
-        self.disable_notify = True
-        _da_set_logo_brightness(self, 0)
-        _da_set_scroll_brightness(self, 0)
-        _set_left_brightness(self, 0)
-        self.disable_notify = False
+        # # Todo make it context?
+        # self.disable_notify = True
+        # _da_set_logo_brightness(self, 0)
+        # _da_set_scroll_brightness(self, 0)
+        # _set_left_brightness(self, 0)
+        # self.disable_notify = False
 
-    def _resume_device(self):
-        """
-        Resume the device
-        Get the last known brightness and then set the brightness
-        """
-        logo_brightness = self.suspend_args.get('brightness', (100, 100, 100))[0]
-        scroll_brightness = self.suspend_args.get('brightness', (100, 100, 100))[1]
-        left_row_brightness = self.suspend_args.get('brightness', (100, 100, 100))[2]
-        self.disable_notify = True
-        _da_set_logo_brightness(self, logo_brightness)
-        _da_set_scroll_brightness(self, scroll_brightness)
-        _set_left_brightness(self, left_row_brightness)
-        self.disable_notify = False
+    # def _resume_device(self):
+        # """
+        # Resume the device
+        # Get the last known brightness and then set the brightness
+        # """
+        # logo_brightness = self.suspend_args.get('brightness', (100, 100, 100))[0]
+        # scroll_brightness = self.suspend_args.get('brightness', (100, 100, 100))[1]
+        # left_row_brightness = self.suspend_args.get('brightness', (100, 100, 100))[2]
+        # self.disable_notify = True
+        # _da_set_logo_brightness(self, logo_brightness)
+        # _da_set_scroll_brightness(self, scroll_brightness)
+        # _set_left_brightness(self, left_row_brightness)
+        # self.disable_notify = False
 
 
 class RazerNagaHex(__RazerDevice):
