@@ -947,7 +947,7 @@ class RazerNagaTrinity(__RazerDeviceSpecialBrightnessSuspend):
     USB_PID = 0x0067
     HAS_MATRIX = True
     DEDICATED_MACRO_KEYS = True
-    MATRIX_DIMS = [1, 3]               
+    MATRIX_DIMS = [1, 3]
     METHODS = ['get_device_type_mouse', 'max_dpi', 'get_dpi_xy', 'set_dpi_xy', 'get_poll_rate', 'set_poll_rate', 'get_logo_brightness', 'set_logo_brightness', 'get_scroll_brightness', 'set_scroll_brightness',
                'get_left_brightness', 'set_left_brightness',
                # Logo
@@ -975,7 +975,7 @@ class RazerNagaTrinity(__RazerDeviceSpecialBrightnessSuspend):
         super(RazerNagaTrinity, self)._close()
 
         # self.key_manager.close()
-        
+
     def _suspend_device(self):
         """
         Suspend the device
