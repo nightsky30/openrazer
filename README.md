@@ -69,6 +69,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Blade Stealth (Late 2020)               |  1532:0259  |
 | Razer Ornata Chroma V2                        |  1532:025D  |
 | Razer Cynosa V2                               |  1532:025E  |
+| Razer Book 13 (2020)                          |  1532:026A  |
 
 ### Mice
 | Device                                        | USB VID:PID |
@@ -127,6 +128,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer DeathAdder V2                           |  1532:0084  |
 | Razer Viper Mini                              |  1532:008A  |
 | Razer DeathAdder V2 Mini                      |  1532:008C  |
+| Razer Naga Left-Handed Edition                |  1532:008D  |
 
 ### Mousemats
 | Device                                        | USB VID:PID |
