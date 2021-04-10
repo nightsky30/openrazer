@@ -3,7 +3,7 @@ Daemon class
 
 This class is the main core of the daemon, this serves a basic dbus module to control the main bit of the daemon
 """
-__version__ = '3.0.0'
+__version__ = '3.0.1'
 
 import configparser
 import logging
@@ -15,9 +15,6 @@ import time
 import setproctitle
 import dbus.mainloop.glib
 import dbus.service
-import gi
-gi.require_version('Gdk', '3.0')
-import gi.repository
 from gi.repository import GLib
 from pyudev import Context, Monitor, MonitorObserver
 import grp
@@ -44,8 +41,6 @@ class RazerDaemon(DBusService):
     * enableTurnOffOnScreensaver - Starts/Continues the run loop on the screensaver thread
     * disableTurnOffOnScreensaver - Pauses the run loop on the screensaver thread
     """
-
-    BUS_NAME = 'org.razer'
 
     def __init__(self, verbose=False, log_dir=None, console_log=False, run_dir=None, config_file=None, persistence_file=None, test_dir=None):
 
@@ -102,7 +97,7 @@ class RazerDaemon(DBusService):
         # Setup DBus to use gobject main loop
         dbus.mainloop.glib.threads_init()
         dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
-        DBusService.__init__(self, self.BUS_NAME, '/org/razer')
+        super().__init__('/org/razer')
 
         self._init_signals()
         self._main_loop = GLib.MainLoop()
@@ -276,7 +271,7 @@ class RazerDaemon(DBusService):
         :type config_file: str or None
         """
         # Generate sections as trying to access a value even if a default exists will die if the section does not
-        for section in ('General', 'Startup', 'Statistics'):
+        for section in ('General', 'Startup'):
             self._config[section] = {}
 
         self._config['General'] = {
@@ -286,9 +281,7 @@ class RazerDaemon(DBusService):
             'sync_effects_enabled': True,
             'devices_off_on_screensaver': True,
             'mouse_battery_notifier': True,
-        }
-        self._config['Statistics'] = {
-            'key_statistics': True,
+            'restore_persistence': True,
         }
 
         if config_file is not None and os.path.exists(config_file):
@@ -479,7 +472,10 @@ class RazerDaemon(DBusService):
                         self.logger.critical("Could not access {0}/device_type, file is not owned by plugdev".format(sys_path))
                         break
 
-                    razer_device = device_class(sys_path, device_number, self._config, self._persistence, testing=self._test_dir is not None, additional_interfaces=sorted(additional_interfaces))
+                    razer_device = device_class(device_path=sys_path, device_number=device_number, config=self._config,
+                                                persistence=self._persistence, testing=self._test_dir is not None,
+                                                additional_interfaces=sorted(additional_interfaces),
+                                                additional_methods=[])
 
                     # Wireless devices sometimes don't listen
                     count = 0
@@ -515,7 +511,9 @@ class RazerDaemon(DBusService):
 
             if device_class.match(sys_name, sys_path):  # Check it matches sys/ ID format and has device_type file
                 self.logger.info('Found valid device.%d: %s', device_number, sys_name)
-                razer_device = device_class(sys_path, device_number, self._config, self._persistence, testing=self._test_dir is not None)
+                razer_device = device_class(device_path=sys_path, device_number=device_number, config=self._config,
+                                            persistence=self._persistence, testing=self._test_dir is not None,
+                                            additional_interfaces=None, additional_methods=[])
 
                 # Its a udev event so currently the device hasn't been chmodded yet
                 time.sleep(0.2)

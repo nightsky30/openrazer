@@ -20,7 +20,7 @@ class _MacroKeyboard(_RazerDeviceBrightnessSuspend):
             kwargs['additional_methods'].extend(['get_keyboard_layout'])
         else:
             kwargs['additional_methods'] = ['get_keyboard_layout']
-        super(_MacroKeyboard, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Methods are loaded into DBus by this point
 
         self.key_manager = _KeyboardKeyManager(self._device_number, self.event_files, self, use_epoll=True, testing=self._testing)
@@ -32,14 +32,13 @@ class _MacroKeyboard(_RazerDeviceBrightnessSuspend):
         """
         Close the key manager
         """
-        super(_MacroKeyboard, self)._close()
+        super()._close()
 
         try:
             self.set_device_mode(0x00, 0x00)  # Device mode
         except FileNotFoundError:  # Could be called when daemon is stopping or device is removed.
             pass
 
-        # TODO look into saving stats in /var/run maybe
         self.key_manager.close()
 
 
@@ -51,7 +50,7 @@ class _RippleKeyboard(_MacroKeyboard):
     """
 
     def __init__(self, *args, **kwargs):
-        super(_RippleKeyboard, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.ripple_manager = _RippleManager(self, self._device_number)
 
@@ -68,7 +67,7 @@ class _RippleKeyboard(_MacroKeyboard):
                     effect_func(self.ripple_manager._ripple_thread._refresh_rate)
 
     def _close(self):
-        super(_RippleKeyboard, self)._close()
+        super()._close()
 
         self.ripple_manager.close()
 
@@ -91,7 +90,7 @@ class RazerNostromo(_RazerDeviceBrightnessSuspend):
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/564/564_tartarus_classic.png"
 
     def __init__(self, *args, **kwargs):
-        super(RazerNostromo, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Methods are loaded into DBus by this point
 
         # self.key_manager = _GamepadKeyManager(self._device_number, self.event_files, self, testing=self._testing)
@@ -100,9 +99,8 @@ class RazerNostromo(_RazerDeviceBrightnessSuspend):
         """
         Close the key manager
         """
-        super(RazerNostromo, self)._close()
+        super()._close()
 
-        # TODO look into saving stats in /var/run maybe
         # self.key_manager.close()
 
 
@@ -122,7 +120,7 @@ class RazerTartarus(_RazerDeviceBrightnessSuspend):
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/228/228_tartarus.png"
 
     def __init__(self, *args, **kwargs):
-        super(RazerTartarus, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Methods are loaded into DBus by this point
 
         # self.key_manager = _GamepadKeyManager(self._device_number, self.event_files, self, testing=self._testing)
@@ -131,9 +129,8 @@ class RazerTartarus(_RazerDeviceBrightnessSuspend):
         """
         Close the key manager
         """
-        super(RazerTartarus, self)._close()
+        super()._close()
 
-        # TODO look into saving stats in /var/run maybe
         # self.key_manager.close()
 
 
@@ -153,7 +150,7 @@ class RazerTartarusChroma(_RazerDeviceBrightnessSuspend):
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/598/598_tartarus_chroma.png"
 
     def __init__(self, *args, **kwargs):
-        super(RazerTartarusChroma, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Methods are loaded into DBus by this point
 
         # self.key_manager = _GamepadKeyManager(self._device_number, self.event_files, self, testing=self._testing)
@@ -162,9 +159,8 @@ class RazerTartarusChroma(_RazerDeviceBrightnessSuspend):
         """
         Close the key manager
         """
-        super(RazerTartarusChroma, self)._close()
+        super()._close()
 
-        # TODO look into saving stats in /var/run maybe
         # self.key_manager.close()
 
 
@@ -201,15 +197,14 @@ class RazerTartarusV2(_RippleKeyboard):
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1255/1255_tartarus_v2.png"
 
     def __init__(self, *args, **kwargs):
-        super(RazerTartarusV2, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _close(self):
         """
         Close the key manager
         """
-        super(RazerTartarusV2, self)._close()
+        super()._close()
 
-        # TODO look into saving stats in /var/run maybe
         # self.key_manager.close()
 
 
@@ -231,7 +226,7 @@ class RazerOrbweaver(_RazerDeviceBrightnessSuspend):
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/56/56_orbweaver.png"
 
     def __init__(self, *args, **kwargs):
-        super(RazerOrbweaver, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Methods are loaded into DBus by this point
 
         # self.key_manager = _OrbweaverKeyManager(self._device_number, self.event_files, self, testing=self._testing)
@@ -240,9 +235,8 @@ class RazerOrbweaver(_RazerDeviceBrightnessSuspend):
         """
         Close the key manager
         """
-        super(RazerOrbweaver, self)._close()
+        super()._close()
 
-        # TODO look into saving stats in /var/run maybe
         # self.key_manager.close()
 
 
@@ -272,7 +266,7 @@ class RazerOrbweaverChroma(_RippleKeyboard):
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/607/607_orbweaver_chroma.png"
 
     def __init__(self, *args, **kwargs):
-        super(RazerOrbweaverChroma, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Methods are loaded into DBus by this point
 
         # self.key_manager = _OrbweaverKeyManager(self._device_number, self.event_files, self, testing=self._testing)
@@ -281,9 +275,8 @@ class RazerOrbweaverChroma(_RippleKeyboard):
         """
         Close the key manager
         """
-        super(RazerOrbweaverChroma, self)._close()
+        super()._close()
 
-        # TODO look into saving stats in /var/run maybe
         # self.key_manager.close()
 
 

@@ -36,13 +36,8 @@ The *[Startup]* section in the configuration file contains values to be used dur
 *mouse_battery_notifier* _bool_
 	This flag specifies that notifications should be shown every ten minutes with the remaining battery level.
 
-## STATISTICS
-
-The *[Statistics]* section in the configuration file contains options to control how and when statistics will be collected.
-
-*key_statistics* _bool_
-	This flag specifies if the daemon is to collect key statistics. Currently this is only collecting the key count per hour per key.
-
+*restore_persistence* _bool_
+	This flag specifies whether effects saved in persistence.conf should be applied when the daemon starts.
 
 # SEE ALSO
 

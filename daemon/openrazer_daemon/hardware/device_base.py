@@ -24,7 +24,6 @@ class RazerDevice(DBusService):
 
     Sets up the logger, sets up DBus
     """
-    BUS_PATH = 'org.razer'
     OBJECT_PATH = '/org/razer/device/'
     METHODS = []
 
@@ -42,7 +41,7 @@ class RazerDevice(DBusService):
 
     DEVICE_IMAGE = None
 
-    def __init__(self, device_path, device_number, config, persistence, testing=False, additional_interfaces=None, additional_methods=[]):
+    def __init__(self, device_path, device_number, config, persistence, testing, additional_interfaces, additional_methods):
 
         self.logger = logging.getLogger('razer.device{0}'.format(device_number))
         self.logger.info("Initialising device.%d %s", device_number, self.__class__.__name__)
@@ -117,7 +116,7 @@ class RazerDevice(DBusService):
                     self.event_files.append(os.path.join(search_dir, event_file))
 
         object_path = os.path.join(self.OBJECT_PATH, self.serial)
-        DBusService.__init__(self, self.BUS_PATH, object_path)
+        super().__init__(object_path)
 
         # Set up methods to suspend and restore device operation
         self.suspend_args = {}
@@ -316,7 +315,8 @@ class RazerDevice(DBusService):
                 if bright_func is not None:
                     bright_func(self.zone[i]["brightness"])
 
-        self.restore_effect()
+        if self.config.getboolean('Startup', "restore_persistence") is True:
+            self.restore_effect()
 
     def send_effect_event(self, effect_name, *args):
         """
@@ -1128,9 +1128,6 @@ class RazerDeviceSpecialBrightnessSuspend(RazerDevice):
     Suspend functions
     """
 
-    def __init__(self, device_path, device_number, config, persistence, testing=False, additional_interfaces=None, additional_methods=[]):
-        super().__init__(device_path, device_number, config, persistence, testing, additional_interfaces, additional_methods)
-
     def _suspend_device(self):
         """
         Suspend the device
@@ -1164,6 +1161,9 @@ class RazerDeviceBrightnessSuspend(RazerDeviceSpecialBrightnessSuspend):
     Inherits from RazerDeviceSpecialBrightnessSuspend
     """
 
-    def __init__(self, device_path, device_number, config, persistence, testing=False, additional_interfaces=None, additional_methods=[]):
-        additional_methods.extend(['get_brightness', 'set_brightness'])
-        super().__init__(device_path, device_number, config, persistence, testing, additional_interfaces, additional_methods)
+    def __init__(self, *args, **kwargs):
+        if 'additional_methods' in kwargs:
+            kwargs['additional_methods'].extend(['get_brightness', 'set_brightness'])
+        else:
+            kwargs['additional_methods'] = ['get_brightness', 'set_brightness']
+        super().__init__(*args, **kwargs)
