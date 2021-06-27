@@ -13,7 +13,6 @@ except ImportError:
 
 
 # TODO https://askubuntu.com/questions/110969/notify-send-ignores-timeout
-INTERVAL_FREQ = 60 * 10
 NOTIFY_TIMEOUT = 4000
 
 
@@ -23,11 +22,12 @@ class BatteryNotifier(threading.Thread):
     """
 
     def __init__(self, parent, device_id, device_name):
-        super(BatteryNotifier, self).__init__()
+        super().__init__()
         self._logger = logging.getLogger('razer.device{0}.batterynotifier'.format(device_id))
         self._notify2 = notify2 is not None
 
         self.event = threading.Event()
+        self.frequency = 0
 
         if self._notify2:
             try:
@@ -68,7 +68,7 @@ class BatteryNotifier(threading.Thread):
     def notify_battery(self):
         now = datetime.datetime.now()
 
-        if (now - self._last_notify_time).seconds > INTERVAL_FREQ:
+        if (now - self._last_notify_time).seconds > self.frequency:
             # Update last notified
             self._last_notify_time = now
 
@@ -80,9 +80,13 @@ class BatteryNotifier(threading.Thread):
                 battery_level = self._get_battery_func()
 
             if battery_level < 10.0:
-                if self._notify2:
-                    self._notification.update(summary="{0} Battery at {1:.1f}%".format(self._device_name, battery_level), message='Please charge your device', icon='notification-battery-low')
-                    self._notification.show()
+                if battery_level == 0.0:
+                    # Do nothing
+                    pass
+                else:
+                    if self._notify2:
+                        self._notification.update(summary="{0} Battery at {1:.1f}%".format(self._device_name, battery_level), message='Please charge your device', icon='notification-battery-low')
+                        self._notification.show()
             else:
                 if self._notify2:
                     self._notification.update(summary="{0} Battery at {1:.1f}%".format(self._device_name, battery_level))
@@ -97,7 +101,7 @@ class BatteryNotifier(threading.Thread):
         """
 
         while not self._shutdown:
-            if self.event.is_set():
+            if self.event.is_set() and self.frequency > 0:
                 self.notify_battery()
 
             time.sleep(0.1)
@@ -145,3 +149,11 @@ class BatteryManager(object):
             self._battery_thread.event.set()
         else:
             self._battery_thread.event.clear()
+
+    @property
+    def frequency(self):
+        return self._battery_thread.frequency
+
+    @frequency.setter
+    def frequency(self, frequency):
+        self._battery_thread.frequency = frequency

@@ -1,6 +1,3 @@
-"""
-BlackWidow Chroma Effects
-"""
 import math
 import struct
 from openrazer_daemon.dbus_services import endpoint
@@ -181,6 +178,19 @@ def set_dpi_xy(self, dpi_x, dpi_y):
     else:
         dpi_bytes = struct.pack('>HH', dpi_x, dpi_y)
 
+    self.dpi[0] = dpi_x
+    self.dpi[1] = dpi_y
+
+    self.set_persistence(None, "dpi_x", dpi_x)
+    self.set_persistence(None, "dpi_y", dpi_y)
+
+    # constrain DPI to maximum
+    if hasattr(self, 'DPI_MAX'):
+        if self.dpi[0] > self.DPI_MAX:
+            self.dpi[0] = self.DPI_MAX
+        if self.dpi[1] > self.DPI_MAX:
+            self.dpi[1] = self.DPI_MAX
+
     with open(driver_path, 'wb') as driver_file:
         driver_file.write(dpi_bytes)
 
@@ -197,11 +207,65 @@ def get_dpi_xy(self):
 
     driver_path = self.get_driver_path('dpi')
 
-    with open(driver_path, 'r') as driver_file:
-        result = driver_file.read()
-        dpi = [int(dpi) for dpi in result.strip().split(':')]
+    # try retrieving DPI from the hardware.
+    # if we can't (e.g. because the mouse has been disconnected)
+    # return the value in local storage.
+    try:
+        with open(driver_path, 'r') as driver_file:
+            result = driver_file.read()
+            dpi = [int(dpi) for dpi in result.strip().split(':')]
+    except FileNotFoundError:
+        return self.dpi
 
     return dpi
+
+
+@endpoint('razer.device.dpi', 'setDPIStages', in_sig='ya(qq)')
+def set_dpi_stages(self, active_stage, dpi_stages):
+    """
+    Set the DPI on the mouse, Takes in pairs of 2 bytes big-endian
+
+    :param active_stage: DPI stage to enable
+    :param dpi_stages: pairs of dpi X and dpi Y for each stage
+    :type dpi_stages: list of (int, int)
+    """
+    self.logger.debug("DBus call set_dpi_stages")
+
+    driver_path = self.get_driver_path('dpi_stages')
+
+    dpi_bytes = struct.pack('B', active_stage)
+    for dpi_x, dpi_y in dpi_stages:
+        dpi_bytes += struct.pack('>HH', dpi_x, dpi_y)
+
+    with open(driver_path, 'wb') as driver_file:
+        driver_file.write(dpi_bytes)
+
+
+@endpoint('razer.device.dpi', 'getDPIStages', out_sig='(ya(qq))')
+def get_dpi_stages(self):
+    """
+    get the DPI stages on the mouse
+
+    :return: List of X, Y DPI
+    :rtype: (int, list of (int, int))
+    """
+    self.logger.debug("DBus call get_dpi_stages")
+
+    driver_path = self.get_driver_path('dpi_stages')
+
+    dpi_stages = []
+    with open(driver_path, 'rb') as driver_file:
+        result = driver_file.read()
+
+        (active_stage,) = struct.unpack('B', result[:1])
+        result = result[1:]
+
+        while len(result) >= 4:
+            (dpi_x, dpi_y) = struct.unpack('>HH', result[:4])
+            dpi_stages.append((dpi_x, dpi_y))
+            result = result[4:]
+
+    return (active_stage, dpi_stages)
 
 
 @endpoint('razer.device.dpi', 'maxDPI', out_sig='i')
@@ -238,6 +302,9 @@ def set_poll_rate(self, rate):
     if rate in (1000, 500, 125):
         driver_path = self.get_driver_path('poll_rate')
 
+        # remember poll rate
+        self.poll_rate = rate
+
         with open(driver_path, 'w') as driver_file:
             driver_file.write(str(rate))
     else:
@@ -254,10 +321,4 @@ def get_poll_rate(self):
     """
     self.logger.debug("DBus call get_poll_rate")
 
-    driver_path = self.get_driver_path('poll_rate')
-
-    with open(driver_path, 'r') as driver_file:
-        result = driver_file.read()
-        result = int(result.strip())
-
-    return result
+    return int(self.poll_rate)

@@ -1,14 +1,19 @@
 # [OpenRazer](https://openrazer.github.io/)
 
-A collection of Linux drivers for the Razer devices, providing kernel drivers, DBus services and python bindings to interact with the DBus interface.
+A collection of Linux drivers for Razer devices - providing kernel drivers, DBus services and Python bindings to interact with the DBus interface.
 
-**Before raising an issue** saying something doesn't work, read [the troubleshooting wiki page](https://github.com/openrazer/openrazer/wiki/Troubleshooting), try not to create new issues if one exists.
+## Something not working?
 
-Also this is the master branch, devices may appear in the tables below but might not be released in package form yet. Check out the stable branch for what _should_ be in the packages.
+Sometimes there are problems with the driver installation due to missing kernel modules or secure boot. Please refer to the [Troubleshooting wiki page](https://github.com/openrazer/openrazer/wiki/Troubleshooting) for guidance.
 
-The below devices are fully feature supported by OpenRazer which means all available USB controllable functions for that product are made available by the library.
+If the troubleshooting guide did not pinpoint the problem, [try searching open/closed issues](https://github.com/openrazer/openrazer/issues?q=is%3Aissue+) before creating a new one.
 
 ## Device Support
+
+The list below contains latest devices supported on this branch (usually **master**). These might not be released yet, so check the [stable branch](https://github.com/openrazer/openrazer/tree/stable) for what should be available in the packages for your distribution.
+
+The devices below are fully feature supported by OpenRazer, which means all available USB controllable functions for that product are made available by the library.
+
 ### Keyboards
 | Device                                        | USB VID:PID |
 | --------------------------------------------- | ----------- |
@@ -39,6 +44,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Huntsman                                |  1532:0227  |
 | Razer BlackWidow Elite                        |  1532:0228  |
 | Razer Cynosa Chroma                           |  1532:022A  |
+| Razer Cynosa Chroma Pro                       |  1532:022C  |
 | Razer Blade Stealth (Mid 2017)                |  1532:022D  |
 | Razer Blade Pro FullHD (2017)                 |  1532:022F  |
 | Razer Blade Stealth (Late 2017)               |  1532:0232  |
@@ -58,7 +64,15 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Blade Stealth (Late 2019)               |  1532:024A  |
 | Razer Blade Pro (Late 2019)                   |  1532:024C  |
 | Razer Blade 15 Studio Edition (2019)          |  1532:024D  |
+| Razer Blade Stealth (Early 2020)              |  1532:0252  |
 | Razer Blade 15 Advanced (2020)                |  1532:0253  |
+| Razer Blade 15 (Early 2020) Base              |  1532:0255  |
+| Razer Huntsman Mini                           |  1532:0257  |
+| Razer Blade Stealth (Late 2020)               |  1532:0259  |
+| Razer Ornata Chroma V2                        |  1532:025D  |
+| Razer Cynosa V2                               |  1532:025E  |
+| Razer Book 13 (2020)                          |  1532:026A  |
+| Razer Blade 15 Advanced (Early 2021)          |  1532:026D  |
 
 ### Mice
 | Device                                        | USB VID:PID |
@@ -85,6 +99,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Mamba Tournament Edition                |  1532:0046  |
 | Razer Orochi (Wired)                          |  1532:0048  |
 | Razer Diamondback Chroma                      |  1532:004C  |
+| Razer DeathAdder 2000                         |  1532:004F  |
 | Razer Naga Hex V2                             |  1532:0050  |
 | Razer Naga Chroma                             |  1532:0053  |
 | Razer DeathAdder 3500                         |  1532:0054  |
@@ -94,7 +109,9 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer DeathAdder Elite                        |  1532:005C  |
 | Razer Abyssus 2000                            |  1532:005E  |
 | Razer Lancehead Tournament Edition            |  1532:0060  |
+| Razer Atheris (Receiver)                      |  1532:0062  |
 | Razer Basilisk                                |  1532:0064  |
+| Razer Basilisk Essential                      |  1532:0065  |
 | Razer Naga Trinity                            |  1532:0067  |
 | Razer Abyssus Elite (D.Va Edition)            |  1532:006A  |
 | Razer Abyssus Essential                       |  1532:006B  |
@@ -108,7 +125,16 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Viper                                   |  1532:0078  |
 | Razer Viper Ultimate (Wired)                  |  1532:007A  |
 | Razer Viper Ultimate (Wireless)               |  1532:007B  |
+| Razer DeathAdder V2 Pro (Wired)               |  1532:007C  |
+| Razer DeathAdder V2 Pro (Wireless)            |  1532:007D  |
+| Razer Basilisk X HyperSpeed                   |  1532:0083  |
 | Razer DeathAdder V2                           |  1532:0084  |
+| Razer Basilisk V2                             |  1532:0085  |
+| Razer Basilisk Ultimate (Wired)               |  1532:0086  |
+| Razer Basilisk Ultimate (Reciever)            |  1532:0088  |
+| Razer Viper Mini                              |  1532:008A  |
+| Razer DeathAdder V2 Mini                      |  1532:008C  |
+| Razer Naga Left-Handed Edition                |  1532:008D  |
 
 ### Mousemats
 | Device                                        | USB VID:PID |
@@ -117,6 +143,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Firefly                                 |  1532:0C00  |
 | Razer Goliathus                               |  1532:0C01  |
 | Razer Goliathus Extended                      |  1532:0C02  |
+| Razer Firefly v2                              |  1532:0C04  |
 
 ### Headsets
 | Device                                        | USB VID:PID |
@@ -126,6 +153,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Kraken 7.1                              |  1532:0506  |
 | Razer Kraken 7.1 V2                           |  1532:0510  |
 | Razer Kraken Ultimate                         |  1532:0527  |
+| Razer Kraken Kitty Edition                    |  1532:0F19  |
 
 ### Controllers
 | Device                                        | USB VID:PID |
@@ -135,6 +163,7 @@ The below devices are fully feature supported by OpenRazer which means all avail
 ### Misc
 | Device                                        | USB VID:PID |
 | --------------------------------------------- | ----------- |
+| Razer Mouse Dock                              |  1532:007E  |
 | Razer Nostromo                                |  1532:0111  |
 | Razer Orbweaver                               |  1532:0113  |
 | Razer Tartarus                                |  1532:0201  |
@@ -147,6 +176,9 @@ The below devices are fully feature supported by OpenRazer which means all avail
 | Razer Chroma Mug Holder                       |  1532:0F07  |
 | Razer Base Station Chroma                     |  1532:0F08  |
 | Razer Chroma Hardware Development Kit (HDK)   |  1532:0F09  |
+| Razer Mouse Bungee V3 Chroma                  |  1532:0F1D  |
+| Razer Base Station V2 Chroma                  |  1532:0F20  |
+| Razer Charging Pad Chroma                     |  1532:0F26  |
 
 #### Determining the Device ID
 Razer devices use a USB VID (Vendor ID) of `1532`. You can identify the USB PID (Product ID) by typing:
@@ -182,11 +214,8 @@ The following applications complement and interact with this driver:
 * [Polychromatic](https://github.com/polychromatic/polychromatic) - a graphical management tool and tray applet to managing Razer peripherals.
 * [RazerGenie](https://github.com/z3ntu/RazerGenie) - Qt application for configuring your Razer devices under GNU/Linux.
 * [razerCommander](https://github.com/GabMus/razerCommander) - Simple GUI written in Gtk3
+* [Snake](http://bithatch.co.uk/snake.html) - a stylised tool and tray applet for configuring Razer devices on Linux, written in Java.
 * [Chroma Feedback](https://github.com/redaxmedia/chroma-feedback) - Turn your Razer keyboard, mouse or headphone into a extreme feedback device
-
-## Contributions
-
-You can donate to [@terrycain](https://github.com/terrycain) with PayPal to terry@terrys-home.co.uk .
 
 ---
 

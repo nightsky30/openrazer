@@ -550,8 +550,10 @@ struct razer_report razer_chroma_extended_matrix_effect_wave(unsigned char varia
     // Others use values 0x01, 0x02
     direction = clamp_u8(direction, 0x00, 0x02);
 
+    // Razer has also added a "Fast Wave" effect for at least one device
+    // which uses the same effect command but a speed parameter of 0x10
     report.arguments[3] = direction;
-    report.arguments[4] = 0x28; // Unknown
+    report.arguments[4] = 0x28; // Speed, lower values are faster
     return report;
 }
 
@@ -1068,8 +1070,8 @@ struct razer_report razer_chroma_misc_set_dpi_xy(unsigned char variable_storage,
     struct razer_report report = get_razer_report(0x04, 0x05, 0x07);
 
     // Keep the DPI within bounds
-    dpi_x = clamp_u16(dpi_x, 128, 16000);
-    dpi_y = clamp_u16(dpi_y, 128, 16000);
+    dpi_x = clamp_u16(dpi_x, 100, 20000);
+    dpi_y = clamp_u16(dpi_y, 100, 20000);
 
     report.arguments[0] = VARSTORE;
 
@@ -1115,6 +1117,65 @@ struct razer_report razer_chroma_misc_set_dpi_xy_byte(unsigned char dpi_x,unsign
 struct razer_report razer_chroma_misc_get_dpi_xy_byte(void)
 {
     struct razer_report report = get_razer_report(0x04, 0x81, 0x03);
+
+    return report;
+}
+
+/**
+ * Set DPI stages of the device.
+ *
+ * count is the numer of stages to set.
+ * active_stage selected stage number.
+ * dpi is an array of size 2 * count containing pairs of dpi x and dpi y
+ * values, one pair for each stage.
+ *
+ * E.g.:
+ *   count = 3
+ *   active_stage = 1
+ *   dpi = [ 800, 800, 1800, 1800, 3200, 3200]
+ *         | stage 1*|  stage 2  |  stage 3  |
+ */
+struct razer_report razer_chroma_misc_set_dpi_stages(unsigned char variable_storage, unsigned char count, unsigned char active_stage, const unsigned short *dpi)
+{
+    struct razer_report report = get_razer_report(0x04, 0x06, 0x26);
+    unsigned int offset;
+    unsigned int i;
+
+    report.arguments[0] = variable_storage;
+    report.arguments[1] = active_stage;
+    report.arguments[2] = count;
+
+    offset = 3;
+    for (i = 0; i < count; i++) {
+        // Stage number
+        report.arguments[offset++] = i;
+
+        // DPI X
+        report.arguments[offset++] = (dpi[0] >> 8) & 0x00FF;
+        report.arguments[offset++] = dpi[0] & 0x00FF;
+
+        // DPI Y
+        report.arguments[offset++] = (dpi[1] >> 8) & 0x00FF;
+        report.arguments[offset++] = dpi[1] & 0x00FF;
+
+        // Reserved
+        report.arguments[offset++] = 0;
+        report.arguments[offset++] = 0;
+
+        dpi += 2;
+    }
+
+    return report;
+}
+
+/**
+ * Get the DPI stages of the device
+ */
+struct razer_report razer_chroma_misc_get_dpi_stages(unsigned char variable_storage)
+{
+    struct razer_report report = get_razer_report(0x04, 0x86, 0x26);
+
+    report.arguments[0] = variable_storage;
 
     return report;
 }
