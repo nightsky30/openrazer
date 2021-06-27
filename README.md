@@ -72,6 +72,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Ornata Chroma V2                        |  1532:025D  |
 | Razer Cynosa V2                               |  1532:025E  |
 | Razer Book 13 (2020)                          |  1532:026A  |
+| Razer Blade 15 Advanced (Early 2021)          |  1532:026D  |
 
 ### Mice
 | Device                                        | USB VID:PID |
@@ -111,6 +112,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Atheris (Bluetooth)                     |  1532:0061  |
 | Razer Atheris (Receiver)                      |  1532:0062  |
 | Razer Basilisk                                |  1532:0064  |
+| Razer Basilisk Essential                      |  1532:0065  |
 | Razer Naga Trinity                            |  1532:0067  |
 | Razer Abyssus Elite (D.Va Edition)            |  1532:006A  |
 | Razer Abyssus Essential                       |  1532:006B  |
@@ -210,10 +212,6 @@ The following applications complement and interact with this driver:
 * [razerCommander](https://github.com/GabMus/razerCommander) - Simple GUI written in Gtk3
 * [Snake](http://bithatch.co.uk/snake.html) - a stylised tool and tray applet for configuring Razer devices on Linux, written in Java.
 * [Chroma Feedback](https://github.com/redaxmedia/chroma-feedback) - Turn your Razer keyboard, mouse or headphone into a extreme feedback device
-
-## Contributions
-
-You can donate to [@terrycain](https://github.com/terrycain) with PayPal to terry@terrys-home.co.uk .
 
 ---
 
