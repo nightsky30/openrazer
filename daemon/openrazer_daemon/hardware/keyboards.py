@@ -344,6 +344,20 @@ class RazerBlackWidowUltimate2013(_MacroKeyboard):
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/245/438_blackwidow_ultimate_2014.png"
 
 
+class RazerBlackWidowTournamentEdition2014(_MacroKeyboard):
+    """
+    Class for the Razer BlackWidow Tournament Edition 2014
+    """
+    EVENT_FILE_REGEX = re.compile(r'.*Razer_Razer_BlackWidow_Tournament_Edition(-if01)?-event-kbd')
+
+    USB_VID = 0x1532
+    USB_PID = 0x011C
+    METHODS = ['get_device_type_keyboard', 'get_game_mode', 'set_game_mode', 'set_macro_mode', 'get_macro_mode',
+               'get_macro_effect', 'set_macro_effect', 'bw_set_pulsate', 'bw_set_static', 'get_macros', 'delete_macro', 'add_macro']
+
+    DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/products/17564/razer-blackwidow-te-stealth-hero-01.png"
+
+
 class RazerBlackWidowChroma(_RippleKeyboard):
     """
     Class for the Razer BlackWidow Chroma
@@ -705,6 +719,27 @@ class RazerHuntsman(_RippleKeyboard):
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1360/1360_huntsman-3.png"
 
 
+class RazerBlackWidowV3TK(_RippleKeyboard):
+    """
+    Class for the Razer BlackWidow V3 TK
+    """
+    EVENT_FILE_REGEX = re.compile(r'.*BlackWidow_V3_Tenkeyless(-if01)?-event-kbd')
+
+    USB_VID = 0x1532
+    USB_PID = 0x0A24
+    HAS_MATRIX = True
+    WAVE_DIRS = (1, 2)
+    MATRIX_DIMS = [6, 18]
+    METHODS = ['get_device_type_keyboard', 'set_wave_effect', 'set_static_effect', 'set_spectrum_effect',
+               'set_reactive_effect', 'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect',
+               'set_custom_effect', 'set_key_row', 'get_game_mode', 'set_game_mode', 'get_macro_mode', 'set_macro_mode',
+               'get_macro_effect', 'set_macro_effect', 'get_macros', 'delete_macro', 'add_macro',
+               'set_starlight_random_effect', 'set_starlight_single_effect', 'set_starlight_dual_effect',
+               'set_ripple_effect', 'set_ripple_effect_random_colour']
+
+    DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1709/1709-blackwidow-v3-tkl.png"
+
+
 class RazerCynosaChroma(_RippleKeyboard):
     """
     Class for the Razer Cynosa Chroma
@@ -898,7 +933,7 @@ class RazerDeathStalkerChroma(_RippleKeyboard):
     USB_PID = 0x0204
     HAS_MATRIX = True
     DEDICATED_MACRO_KEYS = True
-    MATRIX_DIMS = [1, 6]
+    MATRIX_DIMS = [1, 12]
     METHODS = ['get_device_type_keyboard', 'set_wave_effect', 'set_static_effect', 'set_spectrum_effect',
                'set_none_effect', 'set_breath_random_effect', 'set_breath_single_effect', 'set_breath_dual_effect',
                'set_custom_effect', 'set_key_row', 'get_game_mode', 'set_game_mode', 'get_macro_mode', 'set_macro_mode',

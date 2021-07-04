@@ -22,6 +22,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Anansi                                  |  1532:010F  |
 | Razer BlackWidow Ultimate 2013                |  1532:011A  |
 | Razer BlackWidow Stealth                      |  1532:011B  |
+| Razer BlackWidow Tournament Edition 2014      |  1532:011C  |
 | Razer DeathStalker Expert                     |  1532:0202  |
 | Razer BlackWidow Chroma                       |  1532:0203  |
 | Razer DeathStalker Chroma                     |  1532:0204  |
@@ -73,6 +74,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Cynosa V2                               |  1532:025E  |
 | Razer Book 13 (2020)                          |  1532:026A  |
 | Razer Blade 15 Advanced (Early 2021)          |  1532:026D  |
+| Razer BlackWidow V3 Tenkeyless                |  1532:0A24  |
 
 ### Mice
 | Device                                        | USB VID:PID |
