@@ -36,6 +36,12 @@
  */
 #define DRIVER_DESC "Razer Mouse Device Driver"
 
+/* REL_HWHEEL_HI_RES was added in Linux 5.0, so define ourselves for older kernels
+ * See also https://git.kernel.org/torvalds/c/52ea899 */
+#ifndef REL_HWHEEL_HI_RES
+#define REL_HWHEEL_HI_RES 0x0c
+#endif
+
 MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);
 MODULE_VERSION(DRIVER_VERSION);
@@ -3696,6 +3702,12 @@ static DEVICE_ATTR(backlight_led_state,            0660, razer_attr_read_backlig
 #define BIT_TILT_L 5
 #define BIT_TILT_R 6
 
+/*
+ * Documentation: https://www.kernel.org/doc/html/latest/input/event-codes.html#ev-rel
+ * See also https://github.com/torvalds/linux/blob/v5.14/drivers/hid/hid-input.c#L1298-L1303
+ */
+#define SCROLL_DETENT 120
+
 /**
  * Map "Report 4" codes to evdev key codes
  */
@@ -3763,6 +3775,7 @@ static enum hrtimer_restart wheel_tilt_repeat(struct hrtimer *timer)
     struct razer_mouse_device *dev =
         container_of(timer, struct razer_mouse_device, repeat_timer);
     input_report_rel(dev->input, REL_HWHEEL, dev->hwheel_value);
+    input_report_rel(dev->input, REL_HWHEEL_HI_RES, dev->hwheel_value * SCROLL_DETENT);
     input_sync(dev->input);
     if (dev->tilt_repeat)
         hrtimer_forward_now(timer, ms_to_ktime(dev->tilt_repeat));
@@ -3776,6 +3789,7 @@ static void tilt_hwheel_start(struct razer_mouse_device *rdev,
                               __s32 rel_value)
 {
     input_report_rel(rdev->input, REL_HWHEEL, rel_value);
+    input_report_rel(rdev->input, REL_HWHEEL_HI_RES, rel_value * SCROLL_DETENT);
     input_sync(rdev->input);
 
     if (rdev->tilt_repeat && rdev->tilt_repeat_delay) {
@@ -3890,6 +3904,7 @@ static int razer_raw_event(struct hid_device *hdev, struct hid_report *report, u
     struct razer_mouse_device *rdev = hid_get_drvdata(hdev);
 
     switch (hdev->product) {
+    case USB_DEVICE_ID_RAZER_MAMBA_ELITE:
     case USB_DEVICE_ID_RAZER_NAGA_2014:
     case USB_DEVICE_ID_RAZER_BASILISK_V2:
     case USB_DEVICE_ID_RAZER_BASILISK_ULTIMATE_RECEIVER:
@@ -4015,15 +4030,17 @@ static int razer_input_configured(struct hid_device *hdev,
         case USB_DEVICE_ID_RAZER_BASILISK_ULTIMATE_WIRED:
             /* Linux HID doesn't detect the Basilisk V2's tilt wheel
              * or buttons beyond the first 5 */
-            input_set_capability(hidinput->input, EV_KEY, BTN_FORWARD);
-            input_set_capability(hidinput->input, EV_KEY, BTN_BACK);
             input_set_capability(hidinput->input, EV_KEY, BTN_TASK);
             input_set_capability(hidinput->input, EV_KEY, BTN_MOUSE + 8);
             input_set_capability(hidinput->input, EV_KEY, BTN_MOUSE + 9);
             input_set_capability(hidinput->input, EV_KEY, BTN_MOUSE + 10);
         /* fall through */
+        case USB_DEVICE_ID_RAZER_MAMBA_ELITE:
         case USB_DEVICE_ID_RAZER_NAGA_2014:
             input_set_capability(hidinput->input, EV_REL, REL_HWHEEL);
+            input_set_capability(hidinput->input, EV_REL, REL_HWHEEL_HI_RES);
+            input_set_capability(hidinput->input, EV_KEY, BTN_FORWARD);
+            input_set_capability(hidinput->input, EV_KEY, BTN_BACK);
             break;
         }
     }
@@ -4556,6 +4573,10 @@ static int razer_mouse_probe(struct hid_device *hdev, const struct hid_device_id
 
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_effect_custom);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_custom_frame);
+
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_tilt_hwheel);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_tilt_repeat_delay);
+            CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_tilt_repeat);
             break;
 
         case USB_DEVICE_ID_RAZER_DEATHADDER_ESSENTIAL:
@@ -5117,6 +5138,10 @@ static void razer_mouse_disconnect(struct hid_device *hdev)
 
             device_remove_file(&hdev->dev, &dev_attr_matrix_effect_custom);
             device_remove_file(&hdev->dev, &dev_attr_matrix_custom_frame);
+
+            device_remove_file(&hdev->dev, &dev_attr_tilt_hwheel);
+            device_remove_file(&hdev->dev, &dev_attr_tilt_repeat_delay);
+            device_remove_file(&hdev->dev, &dev_attr_tilt_repeat);
             break;
 
         case USB_DEVICE_ID_RAZER_DEATHADDER_ESSENTIAL:

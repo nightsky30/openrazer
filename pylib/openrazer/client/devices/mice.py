@@ -8,21 +8,6 @@ from openrazer.client import constants as _c
 class RazerMouse(__RazerDevice):
     _MACRO_CLASS = _RazerMacro
 
-    def __init__(self, serial, vid_pid=None, daemon_dbus=None):
-        super().__init__(serial, vid_pid=vid_pid, daemon_dbus=daemon_dbus)
-
-        # Capabilities
-        self._capabilities['poll_rate'] = self._has_feature('razer.device.misc', ('getPollRate', 'setPollRate'))
-        self._capabilities['dpi'] = self._has_feature('razer.device.dpi', ('getDPI', 'setDPI'))
-        self._capabilities['dpi_stages'] = self._has_feature('razer.device.dpi', ('getDPIStages', 'setDPIStages'))
-        self._capabilities['available_dpi'] = self._has_feature('razer.device.dpi', 'availableDPI')
-        self._capabilities['battery'] = self._has_feature('razer.device.power', 'getBattery')
-
-        if self.has('dpi'):
-            self._dbus_interfaces['dpi'] = _dbus.Interface(self._dbus, "razer.device.dpi")
-        if self.has('battery'):
-            self._dbus_interfaces['power'] = _dbus.Interface(self._dbus, "razer.device.power")
-
     @property
     def max_dpi(self) -> int:
         """
@@ -89,13 +74,17 @@ class RazerMouse(__RazerDevice):
                 raise ValueError("DPI tuple is not of length 2. Length: {0}".format(len(value)))
             max_dpi = self.max_dpi
             dpi_x, dpi_y = value
+            dpi_x_only = self.has('available_dpi')
 
             if not isinstance(dpi_x, int) or not isinstance(dpi_y, int):
                 raise ValueError("DPI X or Y is not an integer, X:{0} Y:{1}".format(type(dpi_x), type(dpi_y)))
 
             if dpi_x < 0 or dpi_x > max_dpi:
                 raise ValueError("DPI X either too small or too large, X:{0}".format(dpi_x))
-            if dpi_y < 0 or dpi_y > max_dpi:
+
+            if dpi_x_only and not dpi_y == 0:
+                raise ValueError("DPI Y is not supported for this device")
+            elif dpi_y < 0 or dpi_y > max_dpi:
                 raise ValueError("DPI Y either too small or too large, Y:{0}".format(dpi_y))
 
             self._dbus_interfaces['dpi'].setDPI(dpi_x, dpi_y)
@@ -224,61 +213,3 @@ class RazerMouse(__RazerDevice):
 
         else:
             raise NotImplementedError()
-
-    @property
-    def battery_level(self) -> int:
-        """
-        Get battery level from device
-
-        :return: Battery level (0-100)
-        """
-        if self.has('battery'):
-            return int(self._dbus_interfaces['power'].getBattery())
-
-    @property
-    def is_charging(self) -> bool:
-        """
-        Get whether the device is charging or not
-
-        :return: Boolean
-        """
-        if self.has('battery'):
-            return bool(self._dbus_interfaces['power'].isCharging())
-
-    def set_idle_time(self, idle_time) -> None:
-        """
-        Sets the idle time on the device
-
-        :param idle_time: the time in seconds
-        """
-        if self.has('battery'):
-            self._dbus_interfaces['power'].setIdleTime(idle_time)
-
-    def get_idle_time(self) -> int:
-        """
-        Gets the idle time of the device
-
-        :return: Number of seconds before this device goes into powersave
-                 (60-900)
-        """
-        if self.has('battery'):
-            return int(self._dbus_interfaces['power'].getIdleTime())
-
-    def set_low_battery_threshold(self, threshold) -> None:
-        """
-        Set the low battery threshold as a percentage
-
-        :param threshold: Battery threshold as a percentage
-        :type threshold: int
-        """
-        if self.has('battery'):
-            self._dbus_interfaces['power'].setLowBatteryThreshold(threshold)
-
-    def get_low_battery_threshold(self) -> int:
-        """
-        Get the low battery threshold as a percentage
-
-        :return: Battery threshold as a percentage
-        """
-        if self.has('battery'):
-            return int(self._dbus_interfaces['power'].getLowBatteryThreshold())
