@@ -65,9 +65,11 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Blade Stealth (Late 2019)               |  1532:024A  |
 | Razer Blade Pro (Late 2019)                   |  1532:024C  |
 | Razer Blade 15 Studio Edition (2019)          |  1532:024D  |
+| Razer BlackWidow V3                           |  1532:024E  |
 | Razer Blade Stealth (Early 2020)              |  1532:0252  |
 | Razer Blade 15 Advanced (2020)                |  1532:0253  |
 | Razer Blade 15 (Early 2020) Base              |  1532:0255  |
+| Razer Blade Pro 17 (Early 2020)               |  1532:0256  |
 | Razer Huntsman Mini                           |  1532:0257  |
 | Razer BlackWidow V3 Mini Hyperspeed           |  1532:0258  |
 | Razer Blade Stealth (Late 2020)               |  1532:0259  |
@@ -79,6 +81,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Blade 14 (2021)                         |  1532:0270  |
 | Razer BlackWidow V3 Mini Hyperspeed (Wireless)|  1532:0271  |
 | Razer Blade 15 Advanced (Mid 2021)            |  1532:0276  |
+| Razer Blade 17 Pro (Mid 2021)                 |  1532:0279  |
 | Razer BlackWidow V3 Tenkeyless                |  1532:0A24  |
 
 ### Mice
@@ -142,6 +145,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Viper Mini                              |  1532:008A  |
 | Razer DeathAdder V2 Mini                      |  1532:008C  |
 | Razer Naga Left-Handed Edition                |  1532:008D  |
+| Razer Viper 8KHz                              |  1532:0091  |
 
 ### Mousemats
 | Device                                        | USB VID:PID |
@@ -185,6 +189,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Chroma Hardware Development Kit (HDK)   |  1532:0F09  |
 | Razer Mouse Bungee V3 Chroma                  |  1532:0F1D  |
 | Razer Base Station V2 Chroma                  |  1532:0F20  |
+| Razer Thunderbolt 4 Dock Chroma               |  1532:0F21  |
 | Razer Charging Pad Chroma                     |  1532:0F26  |
 
 #### Determining the Device ID
