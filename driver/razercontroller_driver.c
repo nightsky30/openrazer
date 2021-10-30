@@ -116,6 +116,19 @@ static ssize_t razer_attr_read_device_type(struct device *dev, struct device_att
     char *device_type;
 
     switch (device->usb_pid) {
+		
+		case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
+        device_type = "Razer Mug 1\n";
+        break;
+        
+        case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
+        device_type = "Razer HDK 1\n";
+        break;
+        
+        case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
+        device_type = "Razer Base 1\n";
+        break;
+		
 		case USB_DEVICE_ID_RAZER_WOLVERINE_TOURNAMENT_EDITION:
         device_type = "Razer Wolverine Tournament Edition\n";
         break;
@@ -788,6 +801,9 @@ static int razer_controller_probe(struct hid_device *hdev, const struct hid_devi
 
        switch(usb_dev->descriptor.idProduct) {
         case USB_DEVICE_ID_RAZER_WOLVERINE_TOURNAMENT_EDITION:
+        case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
+        case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
+        case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
         // Stuff if needed
             break;
         }
@@ -850,6 +866,9 @@ static void razer_controller_disconnect(struct hid_device *hdev)
 
        switch(usb_dev->descriptor.idProduct) {
         case USB_DEVICE_ID_RAZER_WOLVERINE_TOURNAMENT_EDITION:
+        case USB_DEVICE_ID_RAZER_CHROMA_MUG1:
+        case USB_DEVICE_ID_RAZER_CHROMA_BASE1:
+        case USB_DEVICE_ID_RAZER_CHROMA_HDK1:
         // Stuff if needed
             break;
         }
