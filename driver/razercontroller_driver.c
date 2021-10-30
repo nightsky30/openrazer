@@ -752,6 +752,7 @@ static int razer_input_mapping(struct hid_device *hdev, struct hid_input *hi, st
 static int razer_controller_probe(struct hid_device *hdev, const struct hid_device_id *id)
 {
     int retval = 0;
+    unsigned char expected_protocol = USB_INTERFACE_PROTOCOL_CONTROLLER;
     struct usb_interface *intf = to_usb_interface(hdev->dev.parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
     struct razer_controller_device *dev = NULL;
@@ -768,7 +769,7 @@ static int razer_controller_probe(struct hid_device *hdev, const struct hid_devi
     // Init data
     razer_controller_init(dev, intf, hdev);
 
-    if(dev->usb_interface_protocol == USB_INTERFACE_PROTOCOL_CONTROLLER) {
+    if(dev->usb_interface_protocol == expected_protocol) {
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_version);                               // Get driver version
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_test);                                  // Test mode
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_device_type);                           // Get string of device type
@@ -784,6 +785,12 @@ static int razer_controller_probe(struct hid_device *hdev, const struct hid_devi
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_effect_custom);                  // Custom effect
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_effect_wave);                    // Wave effect
         CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_matrix_brightness);                     // Brightness
+
+       switch(usb_dev->descriptor.idProduct) {
+        case USB_DEVICE_ID_RAZER_WOLVERINE_TOURNAMENT_EDITION:
+        // Stuff if needed
+            break;
+        }
 
         // Needs to be in "Driver" mode just to function
         razer_set_device_mode(dev->usb_dev, 0x03, 0x00);
@@ -817,13 +824,14 @@ exit_free:
  */
 static void razer_controller_disconnect(struct hid_device *hdev)
 {
+	unsigned char expected_protocol = USB_INTERFACE_PROTOCOL_CONTROLLER;
     struct razer_controller_device *dev;
     struct usb_interface *intf = to_usb_interface(hdev->dev.parent);
     struct usb_device *usb_dev = interface_to_usbdev(intf);
 
     dev = hid_get_drvdata(hdev);
 
-    if(dev->usb_interface_protocol == USB_INTERFACE_PROTOCOL_CONTROLLER) {
+    if(dev->usb_interface_protocol == expected_protocol) {
         device_remove_file(&hdev->dev, &dev_attr_version);                               // Get driver version
         device_remove_file(&hdev->dev, &dev_attr_test);                                  // Test mode
         device_remove_file(&hdev->dev, &dev_attr_device_type);                           // Get string of device type
@@ -839,6 +847,12 @@ static void razer_controller_disconnect(struct hid_device *hdev)
         device_remove_file(&hdev->dev, &dev_attr_matrix_effect_custom);                  // Custom effect
         device_remove_file(&hdev->dev, &dev_attr_matrix_effect_wave);                    // Wave effect
         device_remove_file(&hdev->dev, &dev_attr_matrix_brightness);                     // Brightness
+
+       switch(usb_dev->descriptor.idProduct) {
+        case USB_DEVICE_ID_RAZER_WOLVERINE_TOURNAMENT_EDITION:
+        // Stuff if needed
+            break;
+        }
 
     }
 
@@ -878,6 +892,9 @@ static int razer_raw_event(struct hid_device *hdev, struct hid_report *report, u
  */
 static const struct hid_device_id razer_devices[] = {
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_WOLVERINE_TOURNAMENT_EDITION) },
+    { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_CHROMA_MUG1) },
+    { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_CHROMA_BASE1) },
+    { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_CHROMA_HDK1) },
     { 0 }
 };
 
