@@ -23,7 +23,3 @@ class RazerWolverineTE(_RazerDeviceBrightnessSuspend):
 
     DEVICE_IMAGE = "https://assets.razerzone.com/eeimages/support/products/1271/1271_wolverine_tournament_edition.png"
 
-    # Deprecated - RAZER_URLS be removed in future.
-    RAZER_URLS = {
-        "top_img": DEVICE_IMAGE
-    }
