@@ -1,13 +1,7 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
 /*
  * Copyright (c) 2015 Tim Theede <pez2001@voyagerproject.de>
  *               2015 Terry Cain <terrys-home.co.uk>
- */
-
-/*
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option)
- * any later version.
  */
 
 #ifndef __HID_RAZER_KBD_H
@@ -80,13 +74,25 @@
 #define USB_DEVICE_ID_RAZER_ORNATA_V2 0x025D
 #define USB_DEVICE_ID_RAZER_CYNOSA_V2 0x025E
 #define USB_DEVICE_ID_RAZER_HUNTSMAN_V2_ANALOG 0x0266
+#define USB_DEVICE_ID_RAZER_HUNTSMAN_MINI_JP 0x0269
 #define USB_DEVICE_ID_RAZER_BOOK_2020 0x026A
+#define USB_DEVICE_ID_RAZER_HUNTSMAN_V2_TENKEYLESS 0x026B
+#define USB_DEVICE_ID_RAZER_HUNTSMAN_V2 0x026C
 #define USB_DEVICE_ID_RAZER_BLADE_15_ADV_EARLY_2021 0x026D
+#define USB_DEVICE_ID_RAZER_BLADE_17_PRO_EARLY_2021 0x026E
 #define USB_DEVICE_ID_RAZER_BLADE_15_BASE_EARLY_2021 0x026F
 #define USB_DEVICE_ID_RAZER_BLADE_14_2021 0x0270
 #define USB_DEVICE_ID_RAZER_BLACKWIDOW_V3_MINI_WIRELESS 0x0271
 #define USB_DEVICE_ID_RAZER_BLADE_15_ADV_MID_2021 0x0276
 #define USB_DEVICE_ID_RAZER_BLADE_17_PRO_MID_2021 0x0279
+#define USB_DEVICE_ID_RAZER_BLADE_15_BASE_2022 0x027A
+#define USB_DEVICE_ID_RAZER_HUNTSMAN_MINI_ANALOG 0x0282
+#define USB_DEVICE_ID_RAZER_BLADE_15_ADV_EARLY_2022 0x028A
+#define USB_DEVICE_ID_RAZER_BLADE_17_2022 0x028B
+#define USB_DEVICE_ID_RAZER_BLADE_14_2022 0x028C
+#define USB_DEVICE_ID_RAZER_DEATHSTALKER_V2_PRO_WIRELESS 0x0290
+#define USB_DEVICE_ID_RAZER_DEATHSTALKER_V2_PRO_WIRED 0x0292
+#define USB_DEVICE_ID_RAZER_DEATHSTALKER_V2 0x0295
 #define USB_DEVICE_ID_RAZER_BLACKWIDOW_V3_TK 0x0A24
 
 /* Each keyboard report has 90 bytes*/
@@ -133,16 +139,15 @@
 #define RAZER_BLACKWIDOW_V3_WIRELESS_WAIT_MIN_US 4900
 #define RAZER_BLACKWIDOW_V3_WIRELESS_WAIT_MAX_US 5000
 
+#define RAZER_DEATHSTALKER_V2_WIRELESS_WAIT_MIN_US 4900
+#define RAZER_DEATHSTALKER_V2_WIRELESS_WAIT_MAX_US 5000
+
 #define RAZER_FIREFLY_WAIT_MIN_US 900
 #define RAZER_FIREFLY_WAIT_MAX_US 1000
 
 
 struct razer_kbd_device {
-    struct usb_device *usbdev;
-    struct hid_device *hiddev;
     unsigned int fn_on;
-    char name[128];
-    char phys[64];
     DECLARE_BITMAP(pressed_fn, KEY_CNT);
 
     unsigned char block_keys[3];

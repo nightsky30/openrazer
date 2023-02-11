@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 import math
 import struct
 from openrazer_daemon.dbus_services import endpoint
@@ -162,6 +164,12 @@ def set_dpi_xy(self, dpi_x, dpi_y):
     """
     self.logger.debug("DBus call set_dpi_xy")
 
+    if 'available_dpi' in self.METHODS:
+        if dpi_y > 0:
+            raise RuntimeError("Devices with available_dpi are expected to have only one DPI value set, got " + str(dpi_x) + ", " + str(dpi_y))
+        if dpi_x not in self.AVAILABLE_DPI:
+            raise RuntimeError("Provided DPI " + str(dpi_x) + " is not in available_dpi values: " + str(self.AVAILABLE_DPI))
+
     driver_path = self.get_driver_path('dpi')
 
     if self._testing:
@@ -216,6 +224,11 @@ def get_dpi_xy(self):
             dpi = [int(dpi) for dpi in result.strip().split(':')]
     except FileNotFoundError:
         return self.dpi
+
+    if 'available_dpi' in self.METHODS:
+        if len(dpi) != 1:
+            raise RuntimeError("Devices with available_dpi are expected to have only one DPI value returned from driver, got " + str(dpi))
+        dpi = dpi[0], 0
 
     return dpi
 
@@ -292,28 +305,23 @@ def available_dpi(self):
 @endpoint('razer.device.misc', 'setPollRate', in_sig='q')
 def set_poll_rate(self, rate):
     """
-    Set the DPI on the mouse, Takes in 4 bytes big-endian
+    Set the polling rate on the device, Takes in 4 bytes big-endian
 
     :param rate: Poll rate
     :type rate: int
     """
     self.logger.debug("DBus call set_poll_rate")
 
-    if hasattr(self, 'POLL_RATES'):
-        supported_poll_rates = self.POLL_RATES
-    else:
-        supported_poll_rates = (125, 500, 1000)
+    if rate not in self.POLL_RATES:
+        raise RuntimeError("Poll rate " + str(rate) + " is not allowed. Allowed values: " + str(self.POLL_RATES))
 
-    if rate in supported_poll_rates:
-        driver_path = self.get_driver_path('poll_rate')
+    driver_path = self.get_driver_path('poll_rate')
 
-        # remember poll rate
-        self.poll_rate = rate
+    # remember poll rate
+    self.poll_rate = rate
 
-        with open(driver_path, 'w') as driver_file:
-            driver_file.write(str(rate))
-    else:
-        self.logger.error("Poll rate %d is invalid", rate)
+    with open(driver_path, 'w') as driver_file:
+        driver_file.write(str(rate))
 
 
 @endpoint('razer.device.misc', 'getPollRate', out_sig='i')
@@ -339,7 +347,4 @@ def get_supported_poll_rates(self):
     """
     self.logger.debug("DBus call get_supported_poll_rates")
 
-    if hasattr(self, 'POLL_RATES'):
-        return self.POLL_RATES
-    else:
-        return [125, 500, 1000]
+    return self.POLL_RATES

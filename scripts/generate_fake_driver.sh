@@ -1,6 +1,9 @@
 #!/bin/bash
 
 declare -A files_metadata=(
+    ["backlight_led_brightness"]="rw;0"
+    ["backlight_led_effect"]="rw;0"
+    ["backlight_led_rgb"]="rw;0xFF00FF"
     ["backlight_led_state"]="rw;0"
     ["charge_colour"]="w;"
     ["charge_effect"]="w;"
@@ -14,6 +17,7 @@ declare -A files_metadata=(
     ["charging_matrix_effect_static"]="w;"
     ["charging_matrix_effect_wave"]="w;"
     ["device_idle_time"]="rw;600"
+    ["device_mode"]="rw;0x0000"
     ["device_serial"]="r;XX0000000000" # default value will get overwritten
     ["device_type"]="r;%(name)s"
     ["dpi"]="rw;800:800"
@@ -32,8 +36,12 @@ declare -A files_metadata=(
     ["fully_charged_matrix_effect_static"]="w;"
     ["fully_charged_matrix_effect_wave"]="w;"
     ["game_led_state"]="rw;0"
+    ["keyswitch_optimization"]="rw;0"
     ["is_mug_present"]="r;0"
     ["kbd_layout"]="r;01"
+    ["key_alt_f4"]="rw;0x00"
+    ["key_alt_tab"]="rw;0x00"
+    ["key_super"]="rw;0x00"
     ["left_led_brightness"]="rw;0"
     ["left_matrix_effect_breath"]="w;"
     ["left_matrix_effect_none"]="w;"
@@ -89,9 +97,25 @@ declare -A files_metadata=(
     ["scroll_matrix_effect_spectrum"]="w;"
     ["scroll_matrix_effect_static"]="w;"
     ["scroll_matrix_effect_wave"]="w;"
+    ["scroll_mode"]="rw;0"
+    ["scroll_acceleration"]="rw;0"
+    ["scroll_smart_reel"]="rw;0"
     ["tilt_hwheel"]="rw;0"
     ["tilt_repeat"]="rw;0"
     ["tilt_repeat_delay"]="rw;0"
+    ["reset_channels"]="w;1"
+    ["channel1_size"]="rw;8"
+    ["channel2_size"]="rw;8"
+    ["channel3_size"]="rw;8"
+    ["channel4_size"]="rw;8"
+    ["channel5_size"]="rw;8"
+    ["channel6_size"]="rw;8"
+    ["channel1_led_brightness"]="rw;0"
+    ["channel2_led_brightness"]="rw;0"
+    ["channel3_led_brightness"]="rw;0"
+    ["channel4_led_brightness"]="rw;0"
+    ["channel5_led_brightness"]="rw;0"
+    ["channel6_led_brightness"]="rw;0"
     ["version"]="r;1.0.0"
 )
 
@@ -108,7 +132,7 @@ byte_dpi_devices=(
 
 
 get_attr_from_create_device_file() {
-    sed -n 's/[[:space:]]\+CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_\([[:lower:]_]\+\));.*/\1/p'
+    sed -n 's/[[:space:]]\+CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_\([[:lower:][:digit:]_]\+\));.*/\1/p'
 }
 
 driver=$1
@@ -186,8 +210,7 @@ EOF
         # "": sometimes we get empty line in here
         # "test": not used by daemon
         # "fn_toggle": not used by daemon
-        # "device_mode": daemon writes binary and reads ascii which can't be handled easily
-        [[ "$attr" = "" || "$attr" = "test" || "$attr" = "fn_toggle" || "$attr" = "device_mode" ]] && continue
+        [[ "$attr" = "" || "$attr" = "test" || "$attr" = "fn_toggle" ]] && continue
 
         metadata="${files_metadata[$attr]}"
         if [ -z "$metadata" ]; then

@@ -1,3 +1,8 @@
+/* SPDX-License-Identifier: GPL-2.0-or-later */
+/*
+ * Copyright (c) 2015 Terry Cain <terrys-home.co.uk>
+ */
+
 #ifndef DRIVER_RAZERCHROMACOMMON_H_
 #define DRIVER_RAZERCHROMACOMMON_H_
 
@@ -93,6 +98,10 @@ struct razer_report razer_chroma_mouse_extended_matrix_effect_breathing_dual(uns
  */
 struct razer_report razer_chroma_misc_fn_key_toggle(unsigned char state);
 
+struct razer_report razer_chroma_misc_set_keyswitch_optimization_command1(unsigned char optimization_mode);
+struct razer_report razer_chroma_misc_set_keyswitch_optimization_command2(unsigned char optimization_mode);
+struct razer_report razer_chroma_misc_get_keyswitch_optimization(void);
+
 struct razer_report razer_chroma_misc_set_blade_brightness(unsigned char brightness);
 struct razer_report razer_chroma_misc_get_blade_brightness(void);
 
@@ -132,5 +141,14 @@ struct razer_report razer_chroma_misc_set_orochi2011_led(unsigned char led_bitfi
 struct razer_report razer_chroma_misc_set_orochi2011_poll_dpi(unsigned short poll_rate, unsigned char dpi_x, unsigned char dpi_y);
 
 struct razer_report razer_naga_trinity_effect_static(struct razer_rgb* rgb);
+
+struct razer_report razer_chroma_misc_set_scroll_mode(unsigned int scroll_mode);
+struct razer_report razer_chroma_misc_get_scroll_mode(void);
+
+struct razer_report razer_chroma_misc_set_scroll_acceleration(bool acceleration);
+struct razer_report razer_chroma_misc_get_scroll_acceleration(void);
+
+struct razer_report razer_chroma_misc_set_scroll_smart_reel(bool smart_reel);
+struct razer_report razer_chroma_misc_get_scroll_smart_reel(void);
 
 #endif

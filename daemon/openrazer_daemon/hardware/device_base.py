@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 """
 Hardware base class
 """
@@ -33,11 +35,12 @@ class RazerDevice(DBusService):
     USB_PID = None
     HAS_MATRIX = False
     DEDICATED_MACRO_KEYS = False
-    MATRIX_DIMS = [-1, -1]
+    MATRIX_DIMS = None
+    POLL_RATES = None
 
     WAVE_DIRS = (1, 2)
 
-    ZONES = ('backlight', 'logo', 'scroll', 'left', 'right', 'charging', 'fast_charging', 'fully_charged')
+    ZONES = ('backlight', 'logo', 'scroll', 'left', 'right', 'charging', 'fast_charging', 'fully_charged', 'channel1', 'channel2', 'channel3', 'channel4', 'channel5', 'channel6')
 
     DEVICE_IMAGE = None
 
@@ -55,6 +58,7 @@ class RazerDevice(DBusService):
         self._observer_list = []
         self._effect_sync_propagate_up = False
         self._disable_notifications = False
+        self._disable_persistence = False
         self.additional_interfaces = []
         if additional_interfaces is not None:
             self.additional_interfaces.extend(additional_interfaces)
@@ -73,6 +77,8 @@ class RazerDevice(DBusService):
             self.storage_name = "Orochi2011"
         elif self.USB_PID == 0x0016:
             self.storage_name = "DeathAdder35G"
+        elif self.USB_PID == 0x0029:
+            self.storage_name = "DeathAdder35GBlack"
         elif self.USB_PID == 0x0024 or self.USB_PID == 0x0025:
             self.storage_name = "Mamba2012"
         else:
@@ -91,8 +97,15 @@ class RazerDevice(DBusService):
                 "wave_dir": 1,
             }
 
-        self.dpi = [1800, 1800]
+        # Check for a DPI X only device since they need a Y value of 0
+        if 'available_dpi' in self.METHODS:
+            self.dpi = [1800, 0]
+        else:
+            self.dpi = [1800, 1800]
+
         self.poll_rate = 500
+        if 'set_poll_rate' in self.METHODS and not self.POLL_RATES:
+            self.POLL_RATES = [125, 500, 1000]
 
         self._effect_sync = effect_sync.EffectSync(self, device_number)
 
@@ -140,11 +153,20 @@ class RazerDevice(DBusService):
         }
 
         effect_methods = {
-            "backlight": {
+            "backlight_chroma": {
                 ('razer.device.lighting.chroma', 'getEffect', self.get_current_effect, None, 's'),
                 ('razer.device.lighting.chroma', 'getEffectColors', self.get_current_effect_colors, None, 'ay'),
                 ('razer.device.lighting.chroma', 'getEffectSpeed', self.get_current_effect_speed, None, 'i'),
                 ('razer.device.lighting.chroma', 'getWaveDir', self.get_current_wave_dir, None, 'i'),
+            },
+
+            "backlight": {
+                # Intentionally using the same underlying methods as backlight_chroma.
+                # Both refer to the 'backlight' LED internally but partially exist separately due to historical reasons.
+                ('razer.device.lighting.backlight', 'getBacklightEffect', self.get_current_effect, None, 's'),
+                ('razer.device.lighting.backlight', 'getBacklightEffectColors', self.get_current_effect_colors, None, 'ay'),
+                ('razer.device.lighting.backlight', 'getBacklightEffectSpeed', self.get_current_effect_speed, None, 'i'),
+                ('razer.device.lighting.backlight', 'getBacklightWaveDir', self.get_current_wave_dir, None, 'i'),
             },
 
             "logo": {
@@ -204,12 +226,12 @@ class RazerDevice(DBusService):
         # this check is separate from the rest because backlight effects don't have prefixes in their names
         if 'set_static_effect' in self.METHODS or 'bw_set_static' in self.METHODS:
             self.zone["backlight"]["present"] = True
-            for m in effect_methods["backlight"]:
+            for m in effect_methods["backlight_chroma"]:
                 self.logger.debug("Adding {}.{} method to DBus".format(m[0], m[1]))
                 self.add_dbus_method(m[0], m[1], m[2], in_signature=m[3], out_signature=m[4])
 
-        for i in self.ZONES[1:]:
-            if 'set_' + i + '_static' in self.METHODS or 'set_' + i + '_static_naga_hex_v2' in self.METHODS or '`set_' + i + 'active' in self.METHODS:
+        for i in self.ZONES:
+            if 'set_' + i + '_static' in self.METHODS or 'set_' + i + '_static_naga_hex_v2' in self.METHODS or 'set_' + i + '_active' in self.METHODS:
                 self.zone[i]["present"] = True
                 for m in effect_methods[i]:
                     self.logger.debug("Adding {}.{} method to DBus".format(m[0], m[1]))
@@ -233,14 +255,6 @@ class RazerDevice(DBusService):
                 except KeyError:
                     pass
 
-        dpi_func = getattr(self, "setDPI", None)
-        if dpi_func is not None:
-            dpi_func(self.dpi[0], self.dpi[1])
-
-        poll_rate_func = getattr(self, "setPollRate", None)
-        if poll_rate_func is not None:
-            poll_rate_func(self.poll_rate)
-
         # load last effects
         for i in self.ZONES:
             if self.zone[i]["present"]:
@@ -254,7 +268,7 @@ class RazerDevice(DBusService):
 
                     # zone active status
                     try:
-                        self.zone[i]["active"] = bool(self.persistence[self.storage_name][i + '_active'])
+                        self.zone[i]["active"] = self.persistence.getboolean(self.storage_name, i + '_active')
                     except KeyError:
                         pass
 
@@ -300,20 +314,8 @@ class RazerDevice(DBusService):
                     except KeyError:
                         pass
 
-                if 'set_' + i + '_active' in self.METHODS:
-                    active_func = getattr(self, "set" + self.capitalize_first_char(i) + "Active", None)
-                    if active_func is not None:
-                        active_func(self.zone[i]["active"])
-
-                # load brightness level
-                bright_func = None
-                if i == "backlight":
-                    bright_func = getattr(self, "setBrightness", None)
-                elif 'set_' + i + '_brightness' in self.METHODS:
-                    bright_func = getattr(self, "set" + self.capitalize_first_char(i) + "Brightness", None)
-
-                if bright_func is not None:
-                    bright_func(self.zone[i]["brightness"])
+        self.restore_dpi_poll_rate()
+        self.restore_brightness()
 
         if self.config.getboolean('Startup', "restore_persistence") is True:
             self.restore_effect()
@@ -341,6 +343,64 @@ class RazerDevice(DBusService):
         :rtype: bool
         """
         return self.DEDICATED_MACRO_KEYS
+
+    def restore_dpi_poll_rate(self):
+        """
+        Set the device DPI & poll rate to the saved value
+        """
+        dpi_func = getattr(self, "setDPI", None)
+        if dpi_func is not None:
+            dpi_func(self.dpi[0], self.dpi[1])
+
+        poll_rate_func = getattr(self, "setPollRate", None)
+        if poll_rate_func is not None:
+            poll_rate_func(self.poll_rate)
+
+    def restore_brightness(self):
+        """
+        Set the device to the current brightness/active state.
+
+        This is used at launch time.
+        """
+        for i in self.ZONES:
+            if self.zone[i]["present"]:
+                # load active state
+                if 'set_' + i + '_active' in self.METHODS:
+                    active_func = getattr(self, "set" + self.capitalize_first_char(i) + "Active", None)
+                    if active_func is not None:
+                        active_func(self.zone[i]["active"])
+
+                # load brightness level
+                bright_func = None
+                if i == "backlight":
+                    bright_func = getattr(self, "setBrightness", None)
+                elif 'set_' + i + '_brightness' in self.METHODS:
+                    bright_func = getattr(self, "set" + self.capitalize_first_char(i) + "Brightness", None)
+
+                if bright_func is not None:
+                    bright_func(self.zone[i]["brightness"])
+
+    def disable_brightness(self):
+        """
+        Set brightness to 0 and/or active state to false.
+        """
+        for i in self.ZONES:
+            if self.zone[i]["present"]:
+                # set active state
+                if 'set_' + i + '_active' in self.METHODS:
+                    active_func = getattr(self, "set" + self.capitalize_first_char(i) + "Active", None)
+                    if active_func is not None:
+                        active_func(False)
+
+                # set brightness level
+                bright_func = None
+                if i == "backlight":
+                    bright_func = getattr(self, "setBrightness", None)
+                elif 'set_' + i + '_brightness' in self.METHODS:
+                    bright_func = getattr(self, "set" + self.capitalize_first_char(i) + "Brightness", None)
+
+                if bright_func is not None:
+                    bright_func(0)
 
     def restore_effect(self):
         """
@@ -426,6 +486,10 @@ class RazerDevice(DBusService):
         :param value: Value
         :type value: string
         """
+        if self._disable_persistence:
+            return
+        self.logger.debug("Set persistence (%s, %s, %s)", zone, key, value)
+
         self.persistence.status["changed"] = True
 
         if zone:
@@ -825,6 +889,26 @@ class RazerDevice(DBusService):
         """
         self._disable_notifications = value
 
+    @property
+    def disable_persistence(self):
+        """
+        Disable persistence flag
+
+        :return: Flag
+        :rtype: bool
+        """
+        return self._disable_persistence
+
+    @disable_persistence.setter
+    def disable_persistence(self, value):
+        """
+        Set the disable persistence flag
+
+        :param value: Disable
+        :type value: bool
+        """
+        self._disable_persistence = value
+
     def get_driver_path(self, driver_filename):
         """
         Get the path to a driver file
@@ -884,7 +968,7 @@ class RazerDevice(DBusService):
         :rtype: str
         """
         device_mode_path = os.path.join(self._device_path, 'device_mode')
-        with open(device_mode_path, 'r') as mode_file:
+        with open(device_mode_path, 'rb') as mode_file:
             count = 0
             mode = mode_file.read().strip()
             while len(mode) == 0:
@@ -895,7 +979,7 @@ class RazerDevice(DBusService):
                 count += 1
                 time.sleep(0.1)
 
-            return mode
+            return "{0}:{1}".format(mode[0], mode[1])
 
     def set_device_mode(self, mode_id, param):
         """
@@ -966,26 +1050,38 @@ class RazerDevice(DBusService):
         Suspend device
         """
         self.logger.info("Suspending %s", self.__class__.__name__)
+        self.disable_notify = True
+        self.disable_persistence = True
+
+        self.disable_brightness()
         self._suspend_device()
+
+        self.disable_notify = False
+        self.disable_persistence = False
 
     def resume_device(self):
         """
         Resume device
         """
         self.logger.info("Resuming %s", self.__class__.__name__)
+        self.disable_notify = True
+        self.disable_persistence = True
+
+        self.restore_brightness()
         self._resume_device()
+
+        self.disable_notify = False
+        self.disable_persistence = False
 
     def _suspend_device(self):
         """
-        Suspend device
+        Override to implement custom suspend behavior
         """
-        raise NotImplementedError()
 
     def _resume_device(self):
         """
-        Resume device
+        Override to implement custom resume behavior
         """
-        raise NotImplementedError()
 
     def _close(self):
         """
@@ -1121,44 +1217,9 @@ class RazerDevice(DBusService):
         return "{0}:{1}".format(self.__class__.__name__, self.serial)
 
 
-class RazerDeviceSpecialBrightnessSuspend(RazerDevice):
-    """
-    Class for suspend using brightness
-
-    Suspend functions
-    """
-
-    def _suspend_device(self):
-        """
-        Suspend the device
-
-        Get the current brightness level, store it for later and then set the brightness to 0
-        """
-        self.suspend_args.clear()
-        self.suspend_args['brightness'] = openrazer_daemon.dbus_services.dbus_methods.get_brightness(self)
-
-        # Todo make it context?
-        self.disable_notify = True
-        openrazer_daemon.dbus_services.dbus_methods.set_brightness(self, 0)
-        self.disable_notify = False
-
-    def _resume_device(self):
-        """
-        Resume the device
-
-        Get the last known brightness and then set the brightness
-        """
-        brightness = self.suspend_args.get('brightness', 100)
-
-        self.disable_notify = True
-        openrazer_daemon.dbus_services.dbus_methods.set_brightness(self, brightness)
-        self.disable_notify = False
-
-
-class RazerDeviceBrightnessSuspend(RazerDeviceSpecialBrightnessSuspend):
+class RazerDeviceBrightnessSuspend(RazerDevice):
     """
     Class for devices that have get_brightness and set_brightness
-    Inherits from RazerDeviceSpecialBrightnessSuspend
     """
 
     def __init__(self, *args, **kwargs):

@@ -71,19 +71,31 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Blade 15 Base (Early 2020)              |  1532:0255  |
 | Razer Blade Pro 17 (Early 2020)               |  1532:0256  |
 | Razer Huntsman Mini                           |  1532:0257  |
-| Razer BlackWidow V3 Mini Hyperspeed           |  1532:0258  |
+| Razer BlackWidow V3 Mini Hyperspeed (Wired)   |  1532:0258  |
 | Razer Blade Stealth (Late 2020)               |  1532:0259  |
 | Razer BlackWidow V3 Pro (Wired)               |  1532:025A  |
 | Razer Ornata V2                               |  1532:025D  |
 | Razer Cynosa V2                               |  1532:025E  |
 | Razer Huntsman V2 Analog                      |  1532:0266  |
+| Razer Huntsman Mini (JP)                      |  1532:0269  |
 | Razer Book 13 (2020)                          |  1532:026A  |
+| Razer Huntsman V2 TKL                         |  1532:026B  |
+| Razer Huntsman V2                             |  1532:026C  |
 | Razer Blade 15 Advanced (Early 2021)          |  1532:026D  |
+| Razer Blade 17 Pro (Early 2021)               |  1532:026E  |
 | Razer Blade 15 Base (Early 2021)              |  1532:026F  |
 | Razer Blade 14 (2021)                         |  1532:0270  |
 | Razer BlackWidow V3 Mini Hyperspeed (Wireless)|  1532:0271  |
 | Razer Blade 15 Advanced (Mid 2021)            |  1532:0276  |
 | Razer Blade 17 Pro (Mid 2021)                 |  1532:0279  |
+| Razer Blade 15 Base (2022)                    |  1432:027A  |
+| Razer Huntsman Mini Analog                    |  1532:0282  |
+| Razer Blade 15 Advanced (Early 2022)          |  1532:028A  |
+| Razer Blade 17 (2022)                         |  1532:028B  |
+| Razer Blade 14 (2022)                         |  1532:028C  |
+| Razer DeathStalker V2 Pro (Wireless)          |  1532:0290  |
+| Razer DeathStalker V2 Pro (Wired)             |  1532:0292  |
+| Razer DeathStalker V2                         |  1532:0295  |
 | Razer BlackWidow V3 Tenkeyless                |  1532:0A24  |
 
 ### Mice
@@ -94,6 +106,7 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Abyssus 1800                            |  1532:0020  |
 | Razer Mamba 2012 (Wired)                      |  1532:0024  |
 | Razer Mamba 2012 (Wireless)                   |  1532:0025  |
+| Razer DeathAdder 3.5G Black                   |  1532:0029  |
 | Razer Naga 2012                               |  1532:002E  |
 | Razer Imperator 2012                          |  1532:002F  |
 | Razer Ouroboros 2012                          |  1532:0032  |
@@ -102,6 +115,8 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer DeathAdder 2013                         |  1532:0037  |
 | Razer DeathAdder 1800                         |  1532:0038  |
 | Razer Orochi 2013                             |  1532:0039  |
+| Razer Naga Epic Chroma (Wired)                |  1532:003E  |
+| Razer Naga Epic Chroma (Wireless)             |  1532:003F  |
 | Razer Naga 2014                               |  1532:0040  |
 | Razer Naga Hex                                |  1532:0041  |
 | Razer Abyssus 2014                            |  1532:0042  |
@@ -135,11 +150,13 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer DeathAdder Essential (White Edition)    |  1532:0071  |
 | Razer Mamba Wireless (Receiver)               |  1532:0072  |
 | Razer Mamba Wireless (Wired)                  |  1532:0073  |
+| Razer Pro Click (Receiver)                    |  1532:0077  |
 | Razer Viper                                   |  1532:0078  |
 | Razer Viper Ultimate (Wired)                  |  1532:007A  |
 | Razer Viper Ultimate (Wireless)               |  1532:007B  |
 | Razer DeathAdder V2 Pro (Wired)               |  1532:007C  |
 | Razer DeathAdder V2 Pro (Wireless)            |  1532:007D  |
+| Razer Pro Click (Wired)                       |  1532:0080  |
 | Razer Basilisk X HyperSpeed                   |  1532:0083  |
 | Razer DeathAdder V2                           |  1532:0084  |
 | Razer Basilisk V2                             |  1532:0085  |
@@ -148,8 +165,21 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Viper Mini                              |  1532:008A  |
 | Razer DeathAdder V2 Mini                      |  1532:008C  |
 | Razer Naga Left-Handed Edition                |  1532:008D  |
+| Razer Naga Pro (Wired)                        |  1532:008F  |
+| Razer Naga Pro (Wireless)                     |  1532:0090  |
 | Razer Viper 8KHz                              |  1532:0091  |
+| Razer Orochi V2 (Receiver)                    |  1532:0094  |
+| Razer Orochi V2 (Bluetooth)                   |  1532:0095  |
+| Razer Naga X                                  |  1532:0096  |
 | Razer DeathAdder Essential (2021)             |  1532:0098  |
+| Razer Basilisk V3                             |  1532:0099  |
+| Razer DeathAdder V2 X HyperSpeed              |  1532:009C  |
+| Razer Viper V2 Pro (Wired)                    |  1532:00A5  |
+| Razer Viper V2 Pro (Wireless)                 |  1532:00A6  |
+| Razer Basilisk V3 Pro (Wired)                 |  1532:00AA  |
+| Razer Basilisk V3 Pro (Wireless)              |  1532:00AB  |
+| Razer DeathAdder V3 Pro (Wired)               |  1532:00B6  |
+| Razer DeathAdder V3 Pro (Wireless)            |  1532:00B7  |
 
 ### Mousemats
 | Device                                        | USB VID:PID |
@@ -186,7 +216,11 @@ The devices below are fully feature supported by OpenRazer, which means all avai
 | Razer Chroma Mug Holder                       |  1532:0F07  |
 | Razer Base Station Chroma                     |  1532:0F08  |
 | Razer Chroma Hardware Development Kit (HDK)   |  1532:0F09  |
+| Razer Laptop Stand Chroma                     |  1532:0F0D  |
+| Razer Raptor 27                               |  1532:0F12  |
+| Razer Core X Chroma                           |  1532:0F1A  |
 | Razer Mouse Bungee V3 Chroma                  |  1532:0F1D  |
+| Razer Chroma Addressable RGB Controller       |  1532:0F1F  |
 | Razer Base Station V2 Chroma                  |  1532:0F20  |
 | Razer Thunderbolt 4 Dock Chroma               |  1532:0F21  |
 | Razer Charging Pad Chroma                     |  1532:0F26  |
@@ -205,18 +239,23 @@ This will output something similar to this:
 
 ## Installation
 
-Packages are available for these distributions:
+Official packages are available for these distributions (and their derivatives):
 
-* [Ubuntu / Linux Mint](https://openrazer.github.io/#ubuntu)
+* [Ubuntu](https://openrazer.github.io/#ubuntu)
 * [Debian](https://openrazer.github.io/#debian)
 * [Arch Linux](https://openrazer.github.io/#arch)
 * [Fedora](https://openrazer.github.io/#fedora)
 * [openSUSE](https://openrazer.github.io/#opensuse)
+* [Mageia](https://openrazer.github.io/#mageia)
+
+Community supported packages are available for:
+
 * [Gentoo](https://openrazer.github.io/#gentoo)
 * [NixOS](https://openrazer.github.io/#nixos)
+* [Red Hat / CentOS](https://openrazer.github.io/#redhat)
 * [Solus](https://openrazer.github.io/#solus)
+* [Slackware](https://openrazer.github.io/#slackware)
 * [Void Linux](https://openrazer.github.io/#voidlinux)
-* [Red Hat / CentOS](https://openrazer.github.io/#redhat) (unofficial)
 
 ## Applications
 

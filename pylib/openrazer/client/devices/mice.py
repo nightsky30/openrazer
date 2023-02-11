@@ -1,8 +1,9 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 import dbus as _dbus
 
 from openrazer.client.devices import RazerDevice as __RazerDevice
 from openrazer.client.macro import RazerMacro as _RazerMacro
-from openrazer.client import constants as _c
 
 
 class RazerMouse(__RazerDevice):
@@ -179,54 +180,91 @@ class RazerMouse(__RazerDevice):
             raise NotImplementedError()
 
     @property
-    def poll_rate(self) -> int:
+    def scroll_mode(self) -> int:
         """
-        Get poll rate from device
+        Get the scroll wheel mode of the device
 
-        :return: Poll rate
+        :return: The device's current scroll mode (0 = tactile, 1 = free spin)
         :rtype: int
 
         :raises NotImplementedError: If function is not supported
         """
-        if self.has('poll_rate'):
-            return int(self._dbus_interfaces['device'].getPollRate())
+        if self.has('scroll_mode'):
+            return int(self._dbus_interfaces['scroll'].getScrollMode())
         else:
             raise NotImplementedError()
 
-    @poll_rate.setter
-    def poll_rate(self, poll_rate: int):
+    @scroll_mode.setter
+    def scroll_mode(self, mode: int):
         """
-        Set poll rate of device
+        Set the scroll mode of the device
 
-        :param poll_rate: Polling rate
-        :type poll_rate: int
+        :param mode: The mode to set (0 = tactile, 1 = free spin)
+        :type mode: int
 
         :raises NotImplementedError: If function is not supported
         """
-        if self.has('poll_rate'):
-            if not isinstance(poll_rate, int):
-                raise ValueError("Poll rate is not an integer: {0}".format(poll_rate))
-            if poll_rate not in (_c.POLL_125HZ, _c.POLL_500HZ, _c.POLL_1000HZ, _c.POLL_2000HZ, _c.POLL_4000HZ, _c.POLL_8000HZ):
-                raise ValueError('Poll rate "{0}" is not one of {1}'.format(poll_rate, (_c.POLL_125HZ, _c.POLL_500HZ, _c.POLL_1000HZ, _c.POLL_2000HZ, _c.POLL_4000HZ, _c.POLL_8000HZ)))
-
-            self._dbus_interfaces['device'].setPollRate(poll_rate)
-
+        if self.has('scroll_mode'):
+            self._dbus_interfaces['scroll'].setScrollMode(mode)
         else:
             raise NotImplementedError()
 
     @property
-    def supported_poll_rates(self) -> list:
+    def scroll_acceleration(self) -> bool:
         """
-        Get poll rates supported by the device
+        Get the device's scroll acceleration state
 
-        :return: Supported poll rates
-        :rtype: list
+        :return: true if acceleration enabled, false otherwise
+        :rtype: bool
 
         :raises NotImplementedError: If function is not supported
         """
-        if self.has('supported_poll_rates'):
-            dbuslist = self._dbus_interfaces['device'].getSupportedPollRates()
-            # Repack list from dbus ints to normal ints
-            return [int(d) for d in dbuslist]
+        if self.has('scroll_acceleration'):
+            return bool(int(self._dbus_interfaces['scroll'].getScrollAcceleration()))
+        else:
+            raise NotImplementedError()
+
+    @scroll_acceleration.setter
+    def scroll_acceleration(self, enabled: bool):
+        """
+        Set the device's scroll acceleration state
+
+        :param enabled: true to enable acceleration, false to disable it
+        :type enabled: bool
+
+        :raises NotImplementedError: If function is not supported
+        """
+        if self.has('scroll_acceleration'):
+            self._dbus_interfaces['scroll'].setScrollAcceleration(enabled)
+        else:
+            raise NotImplementedError()
+
+    @property
+    def scroll_smart_reel(self) -> bool:
+        """
+        Get the device's "smart reel" state
+
+        :return: true if smart reel enabled, false otherwise
+        :rtype: bool
+
+        :raises NotImplementedError: If function is not supported
+        """
+        if self.has('scroll_smart_reel'):
+            return bool(int(self._dbus_interfaces['scroll'].getScrollSmartReel()))
+        else:
+            raise NotImplementedError()
+
+    @scroll_smart_reel.setter
+    def scroll_smart_reel(self, enabled: bool):
+        """
+        Set the device's "smart reel" state
+
+        :param enabled: true to enable smart reel, false to disable it
+        :type enabled: bool
+
+        :raises NotImplementedError: If function is not supported
+        """
+        if self.has('scroll_smart_reel'):
+            self._dbus_interfaces['scroll'].setScrollSmartReel(enabled)
         else:
             raise NotImplementedError()

@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Copyright (c) 2015 Terry Cain <terrys-home.co.uk>
+ */
+
 #include "razerchromacommon.h"
 
 
@@ -469,8 +474,16 @@ struct razer_report razer_chroma_standard_matrix_effect_custom_frame(unsigned ch
  */
 struct razer_report razer_chroma_standard_matrix_set_custom_frame(unsigned char row_index, unsigned char start_col, unsigned char stop_col, unsigned char *rgb_data)
 {
+    const size_t start_arg_offset = 4;
+    struct razer_report report = {0};
     size_t row_length = (size_t) (((stop_col + 1) - start_col) * 3);
-    struct razer_report report = get_razer_report(0x03, 0x0B, 0x46); // In theory should be able to leave data size at max as we have start/stop
+
+    if (row_length > sizeof(report.arguments) - start_arg_offset) {
+        printk(KERN_ALERT "razerchroma: RGB data too long\n");
+        row_length = sizeof(report.arguments) - start_arg_offset;
+    }
+
+    report = get_razer_report(0x03, 0x0B, 0x46); // In theory should be able to leave data size at max as we have start/stop
 
     // printk(KERN_ALERT "razerkbd: Row ID: %d, Start: %d, Stop: %d, row length: %d\n", row_index, start_col, stop_col, (unsigned char)row_length);
 
@@ -746,11 +759,20 @@ struct razer_report razer_chroma_extended_matrix_set_custom_frame(unsigned char 
 
 struct razer_report razer_chroma_extended_matrix_set_custom_frame2(unsigned char row_index, unsigned char start_col, unsigned char stop_col, unsigned char *rgb_data, size_t packetLength)
 {
-    const size_t row_length = (size_t) (((stop_col + 1) - start_col) * 3);
+    const size_t start_arg_offset = 5;
+    size_t data_length = 0;
+    struct razer_report report = {0};
+    size_t row_length = (size_t) (((stop_col + 1) - start_col) * 3);
+
+    if (row_length > sizeof(report.arguments) - start_arg_offset) {
+        printk(KERN_ALERT "razerchroma: RGB data too long\n");
+        row_length = sizeof(report.arguments) - start_arg_offset;
+    }
+
     // Some devices need a specific packet length, most devices are happy with 0x47
     // e.g. the Mamba Elite needs a "row_length + 5" packet length
-    const size_t data_length = (packetLength != 0) ? packetLength : row_length + 5;
-    struct razer_report report = get_razer_report(0x0F, 0x03, data_length);
+    data_length = (packetLength != 0) ? packetLength : row_length + 5;
+    report = get_razer_report(0x0F, 0x03, data_length);
 
     report.transaction_id.id = 0x3F;
 
@@ -909,6 +931,75 @@ struct razer_report razer_chroma_misc_fn_key_toggle(unsigned char state)
 }
 
 /**
+ * Set the keyswitch optimization on the device (first of two commands)
+ *
+ * Status Trans Packet Proto DataSize Class CMD Args
+ * 00     1f    0000   00    04       02    02  001400280000               | SET KEY OPTIMIZATION STATE (TYPING SET)
+ * 00     1f    0000   00    04       02    02  000000000000               | SET KEY OPTIMIZATION STATE (GAMING SET)
+ */
+struct razer_report razer_chroma_misc_set_keyswitch_optimization_command1(unsigned char optimization_mode)
+{
+    struct razer_report report = report = get_razer_report(0x02, 0x02, 0x04); // class, id, data size
+
+    // 0x00 -> Typing (Set)
+    // 0x01 -> Gaming (Set) - Same report, doesn't include any arguments
+    if(optimization_mode == 0x00) {
+        report.arguments[0] = 0x00;
+        report.arguments[1] = 0x14;
+        report.arguments[2] = 0x00;
+        report.arguments[3] = 0x28;
+        report.arguments[4] = 0x00;
+    }
+
+    return report;
+}
+
+/**
+* Set the keyswitch optimization on the device (second of two commands)
+ *
+ * Status Trans Packet Proto DataSize Class CMD Args
+ * 00     1f    0000   00    05       02    15  010014002800               | SET KEY OPTIMIZATION STATE (TYPING VARSTORE) ????
+ * 00     1f    0000   00    05       02    15  010000000000               | SET KEY OPTIMIZATION STATE (GAMING VARSTORE) ????
+ */
+struct razer_report razer_chroma_misc_set_keyswitch_optimization_command2(unsigned char optimization_mode)
+{
+    struct razer_report report = get_razer_report(0x02, 0x15, 0x05); // class, id, data size
+
+    // 0x00 -> Typing (Store)
+    // 0x01 -> Gaming (Store)
+    switch(optimization_mode) {
+    case 0x00:
+        report.arguments[0] = 0x01;
+        report.arguments[1] = 0x00;
+        report.arguments[2] = 0x14;
+        report.arguments[3] = 0x00;
+        report.arguments[4] = 0x28;
+        report.arguments[5] = 0x00;
+        break;
+    case 0x01:
+        report.arguments[0] = 0x01;
+        break;
+    }
+
+    return report;
+}
+
+/**
+ * Get the keyswitch optimization on the device
+ *
+ * Identifiers in arg[1] and arg[3]
+ *
+ * 0x00<->0x14 is in arg[1]
+ * 0x00<->0x28 is in arg[3]
+ */
+struct razer_report razer_chroma_misc_get_keyswitch_optimization(void)
+{
+    struct razer_report report = get_razer_report(0x02, 0x82, 0x04); // class, id, data size
+
+    return report;
+}
+
+/**
  * Set the brightness of an LED on the device
  *
  * Status Trans Packet Proto DataSize Class CMD Args
@@ -942,8 +1033,14 @@ struct razer_report razer_chroma_misc_get_blade_brightness(void)
  */
 struct razer_report razer_chroma_misc_one_row_set_custom_frame(unsigned char start_col, unsigned char stop_col, unsigned char *rgb_data) // TODO recheck custom frame hex
 {
+    const size_t start_arg_offset = 2;
     struct razer_report report = get_razer_report(0x03, 0x0C, 0x32);
     size_t row_length = (size_t) (((stop_col + 1) - start_col) * 3);
+
+    if (row_length > sizeof(report.arguments) - start_arg_offset) {
+        printk(KERN_ALERT "razerchroma: RGB data too long\n");
+        row_length = sizeof(report.arguments) - start_arg_offset;
+    }
 
     report.arguments[0] = start_col;
     report.arguments[1] = stop_col;
@@ -1090,6 +1187,9 @@ struct razer_report razer_chroma_misc_set_polling_rate2(unsigned short polling_r
     case  500:
         report.arguments[1] = 0x10;
         break;
+    case  250:
+        report.arguments[1] = 0x20;
+        break;
     case  125:
         report.arguments[1] = 0x40;
         break;
@@ -1129,8 +1229,8 @@ struct razer_report razer_chroma_misc_set_dpi_xy(unsigned char variable_storage,
     struct razer_report report = get_razer_report(0x04, 0x05, 0x07);
 
     // Keep the DPI within bounds
-    dpi_x = clamp_u16(dpi_x, 100, 20000);
-    dpi_y = clamp_u16(dpi_y, 100, 20000);
+    dpi_x = clamp_u16(dpi_x, 100, 30000);
+    dpi_y = clamp_u16(dpi_y, 100, 30000);
 
     report.arguments[0] = VARSTORE;
 
@@ -1359,18 +1459,90 @@ struct razer_report razer_naga_trinity_effect_static(struct razer_rgb *rgb)
     return report;
 }
 
+/**
+ * Set scroll wheel mode on the device
+ *
+ * Status Trans Packet Proto DataSize Class CMD Args
+ * 00     1f    0000   00    02       02    14  0100    | SET SCROLL WHEEL MODE (VARSTR, TACTILE)
+ * 00     1f    0000   00    02       02    14  0101    | SET SCROLL WHEEL MODE (VARSTR, FREESPIN)
+ */
+struct razer_report razer_chroma_misc_set_scroll_mode(unsigned int scroll_mode)
+{
+    struct razer_report report = get_razer_report(0x02, 0x14, 0x02);
 
+    report.arguments[0] = VARSTORE;
+    report.arguments[1] = scroll_mode;
 
+    return report;
+}
 
+/**
+ * Get scroll wheel mode from the device
+ */
+struct razer_report razer_chroma_misc_get_scroll_mode(void)
+{
+    struct razer_report report = get_razer_report(0x02, 0x94, 0x02);
 
+    report.arguments[0] = VARSTORE;
 
+    return report;
+}
 
+/**
+ * Set scroll wheel acceleration on/off on the device
+ *
+ * Status Trans Packet Proto DataSize Class CMD Args
+ * 00     1f    0000   00    02       02    16  0101    | SET SCROLL WHEEL ACCELERATION (VARSTR, ON)
+ * 00     1f    0000   00    02       02    16  0100    | SET SCROLL WHEEL ACCELERATION (VARSTR, OFF)
+ */
+struct razer_report razer_chroma_misc_set_scroll_acceleration(bool acceleration)
+{
+    struct razer_report report = get_razer_report(0x02, 0x16, 0x02);
 
+    report.arguments[0] = VARSTORE;
+    report.arguments[1] = acceleration;
 
+    return report;
+}
 
+/**
+ * Get scroll wheel acceleration state from the device
+ */
+struct razer_report razer_chroma_misc_get_scroll_acceleration(void)
+{
+    struct razer_report report = get_razer_report(0x02, 0x96, 0x02);
 
+    report.arguments[0] = VARSTORE;
 
+    return report;
+}
 
+/**
+ * Set scroll wheel "smart reel" on/off on the device.
+ * Smart reel automatically changes scroll wheel mode from tactile to free spin and back depending on scroll speed.
+ *
+ * Status Trans Packet Proto DataSize Class CMD Args
+ * 00     1f    0000   00    02       02    17  0101    | SET SCROLL WHEEL SMART REEL (VARSTR, ON)
+ * 00     1f    0000   00    02       02    17  0100    | SET SCROLL WHEEL SMART REEL (VARSTR, OFF)
+ */
+struct razer_report razer_chroma_misc_set_scroll_smart_reel(bool smart_reel)
+{
+    struct razer_report report = get_razer_report(0x02, 0x17, 0x02);
 
+    report.arguments[0] = VARSTORE;
+    report.arguments[1] = smart_reel;
 
+    return report;
+}
 
+/**
+ * Get scroll wheel "smart reel" state from the device
+ */
+struct razer_report razer_chroma_misc_get_scroll_smart_reel(void)
+{
+    struct razer_report report = get_razer_report(0x02, 0x97, 0x02);
+
+    report.arguments[0] = VARSTORE;
+
+    return report;
+}
